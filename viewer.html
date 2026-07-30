@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Full-page Power BI dashboard viewer.">
+  <title>Dashboard Viewer | Power BI Dashboard Portal</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="viewer-page">
+  <div class="viewer-shell">
+    <header class="viewer-header">
+      <div class="viewer-left">
+        <a class="back-link" href="dashboards.html" title="Back to dashboards" aria-label="Back to dashboards">←</a>
+        <div class="viewer-title">
+          <strong id="viewerName">Dashboard Viewer</strong>
+          <span>Full-page Power BI report</span>
+        </div>
+      </div>
+      <div class="viewer-credit">Designed by <span>Lean Academy Sri Lanka</span></div>
+    </header>
+    <main class="viewer-stage" id="viewerStage"></main>
+  </div>
+
+  <script src="js/dashboard-config.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
