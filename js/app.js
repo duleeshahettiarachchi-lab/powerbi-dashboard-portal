@@ -70,7 +70,7 @@
                   ? `
                     <a
                       class="open-dashboard enabled btn"
-                      href="viewer.html?id=${encodeURIComponent(item.id)}&v=20260805-6"
+                      href="viewer.html?id=${encodeURIComponent(item.id)}&v=20260805-7"
                     >
                       Open Dashboard &rarr;
                     </a>
