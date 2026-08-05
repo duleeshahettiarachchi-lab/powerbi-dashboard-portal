@@ -67,18 +67,16 @@
               <p>${escapeHtml(item.description)}</p>
               <div class="card-action">
                 ${available
-  ? `
-    <div class="card-action">
-      <a
-        class="open-dashboard enabled btn"
-        href="viewer.html?id=${encodeURIComponent(item.id)}&v=20260805-5"
-      >
-        Open Dashboard →
-      </a>
-    </div>
-  `
-  : ""
-}
+                  ? `
+                    <a
+                      class="open-dashboard enabled btn"
+                      href="viewer.html?id=${encodeURIComponent(item.id)}&v=20260805-6"
+                    >
+                      Open Dashboard &rarr;
+                    </a>
+                  `
+                  : ""
+                }
               </div>
             </div>
           </article>`;
@@ -117,6 +115,8 @@
 
     if (title) title.textContent = item.name;
     document.title = `${item.name} | Power BI Dashboard Portal`;
+
+    stage.innerHTML = "";
 
     const iframe = document.createElement("iframe");
     iframe.title = item.name;
