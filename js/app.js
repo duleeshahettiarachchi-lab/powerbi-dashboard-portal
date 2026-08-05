@@ -14,6 +14,33 @@
       .replaceAll("'", "&#039;");
   }
 
+  function getPowerBiPageView() {
+    const landscape = window.matchMedia("(orientation: landscape)").matches;
+    return landscape ? "fitToPage" : "fitToWidth";
+  }
+
+  function buildPowerBiUrl(value) {
+    const rawUrl = String(value || "").trim();
+
+    try {
+      const url = new URL(rawUrl);
+      if (url.hostname.includes("powerbi.com")) {
+        url.searchParams.set("pageView", getPowerBiPageView());
+      }
+      return url.toString();
+    } catch (error) {
+      return rawUrl;
+    }
+  }
+
+  function setViewerSource(iframe, rawUrl) {
+    const nextUrl = buildPowerBiUrl(rawUrl);
+    if (iframe.dataset.viewerSource !== nextUrl) {
+      iframe.dataset.viewerSource = nextUrl;
+      iframe.src = nextUrl;
+    }
+  }
+
   function renderDashboardCards() {
     const grid = document.getElementById("dashboardGrid");
     if (!grid) return;
@@ -49,7 +76,7 @@
     <div class="card-action">
       <a
         class="open-dashboard enabled btn"
-        href="viewer.html?id=${encodeURIComponent(item.id)}"
+        href="viewer.html?id=${encodeURIComponent(item.id)}&v=20260805-4"
       >
         Open Dashboard →
       </a>
@@ -97,12 +124,20 @@
     document.title = `${item.name} | Power BI Dashboard Portal`;
 
     const iframe = document.createElement("iframe");
-    iframe.src = item.url.trim();
     iframe.title = item.name;
     iframe.allowFullscreen = true;
     iframe.setAttribute("allow", "fullscreen");
     iframe.setAttribute("referrerpolicy", "strict-origin-when-cross-origin");
     stage.appendChild(iframe);
+    setViewerSource(iframe, item.url);
+
+    let resizeTimer;
+    window.addEventListener("resize", function () {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(function () {
+        setViewerSource(iframe, item.url);
+      }, 300);
+    });
   }
 
   document.addEventListener("DOMContentLoaded", function () {
