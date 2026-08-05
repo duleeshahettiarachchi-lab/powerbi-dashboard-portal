@@ -14,18 +14,13 @@
       .replaceAll("'", "&#039;");
   }
 
-  function getPowerBiPageView() {
-    const landscape = window.matchMedia("(orientation: landscape)").matches;
-    return landscape ? "fitToPage" : "fitToWidth";
-  }
-
   function buildPowerBiUrl(value) {
     const rawUrl = String(value || "").trim();
 
     try {
       const url = new URL(rawUrl);
       if (url.hostname.includes("powerbi.com")) {
-        url.searchParams.set("pageView", getPowerBiPageView());
+        url.searchParams.set("pageView", "fitToWidth");
       }
       return url.toString();
     } catch (error) {
@@ -76,7 +71,7 @@
     <div class="card-action">
       <a
         class="open-dashboard enabled btn"
-        href="viewer.html?id=${encodeURIComponent(item.id)}&v=20260805-4"
+        href="viewer.html?id=${encodeURIComponent(item.id)}&v=20260805-5"
       >
         Open Dashboard →
       </a>
