@@ -1,142 +1,61 @@
-(function () {
-  const config = Array.isArray(window.DASHBOARD_CONFIG) ? window.DASHBOARD_CONFIG : [];
-
-  function hasUrl(item) {
-    return Boolean(item && typeof item.url === "string" && item.url.trim());
-  }
-
-  function escapeHtml(value) {
-    return String(value ?? "")
-      .replaceAll("&", "&amp;")
-      .replaceAll("<", "&lt;")
-      .replaceAll(">", "&gt;")
-      .replaceAll('"', "&quot;")
-      .replaceAll("'", "&#039;");
-  }
-
-  function buildPowerBiUrl(value) {
-    const rawUrl = String(value || "").trim();
-
-    try {
-      const url = new URL(rawUrl);
-      if (url.hostname.includes("powerbi.com")) {
-        url.searchParams.set("pageView", "fitToWidth");
-      }
-      return url.toString();
-    } catch (error) {
-      return rawUrl;
-    }
-  }
-
-  function setViewerSource(iframe, rawUrl) {
-    const nextUrl = buildPowerBiUrl(rawUrl);
-    if (iframe.dataset.viewerSource !== nextUrl) {
-      iframe.dataset.viewerSource = nextUrl;
-      iframe.src = nextUrl;
-    }
-  }
-
-  function renderDashboardCards() {
-    const grid = document.getElementById("dashboardGrid");
-    if (!grid) return;
-
-    const search = document.getElementById("dashboardSearch");
-    const counter = document.getElementById("dashboardCount");
-    const emptyState = document.getElementById("emptyState");
-
-    function draw(filterText = "") {
-      const term = filterText.trim().toLowerCase();
-      const filtered = config.filter(item =>
-        item.name.toLowerCase().includes(term) ||
-        item.description.toLowerCase().includes(term)
-      );
-
-      grid.innerHTML = filtered.map(item => {
-        const available = hasUrl(item);
-        return `
-          <article class="dashboard-card">
-            <div class="card-accent"></div>
-            <div class="card-body">
-              <div class="card-top">
-                <div class="dashboard-icon">${escapeHtml(item.icon || "BI")}</div>
-                <span class="status-badge ${available ? "available" : "unavailable"}">
-                  ${available ? "Available" : "Not available"}
-                </span>
-              </div>
-              <h3>${escapeHtml(item.name)}</h3>
-              <p>${escapeHtml(item.description)}</p>
-              <div class="card-action">
-                ${available
-  ? `
-      <a
-        class="open-dashboard enabled btn"
-        href="viewer.html?id=${encodeURIComponent(item.id)}&v=20260805-6"
-      >
-        Open Dashboard →
-      </a>
-  `
-  : ""
-}
-              </div>
-            </div>
-          </article>`;
-      }).join("");
-
-      if (counter) counter.textContent = `${filtered.length} dashboard${filtered.length === 1 ? "" : "s"}`;
-      if (emptyState) emptyState.style.display = filtered.length ? "none" : "block";
-    }
-
-    draw();
-    if (search) search.addEventListener("input", event => draw(event.target.value));
-  }
-
-  function loadViewer() {
-    const stage = document.getElementById("viewerStage");
-    if (!stage) return;
-
-    const params = new URLSearchParams(window.location.search);
-    const id = Number(params.get("id"));
-    const item = config.find(entry => Number(entry.id) === id);
-    const title = document.getElementById("viewerName");
-
-    if (!item || !hasUrl(item)) {
-      if (title) title.textContent = item ? item.name : "Dashboard Viewer";
-      stage.innerHTML = `
-        <div class="viewer-message">
-          <div class="viewer-message-card">
-            <div class="viewer-message-icon">BI</div>
-            <h1>Dashboard Not Available</h1>
-            <p>No Power BI URL has been added for this dashboard. Add the URL in <strong>js/dashboard-config.js</strong> and open it again.</p>
-            <a class="btn btn-primary" href="dashboards.html">Back to Dashboards</a>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Company Power BI dashboards.">
+  <title>Dashboards | Power BI Dashboard Portal</title>
+  <link rel="stylesheet" href="css/styles.css?v=20260805-6">
+</head>
+<body>
+  <div class="site-shell">
+    <header class="site-header">
+      <div class="header-inner">
+        <a class="brand" href="index.html" aria-label="Dashboard Portal Home">
+          <div class="brand-mark">BI</div>
+          <div class="brand-copy">
+            <strong>Power BI Dashboard Portal</strong>
+            <span>Company performance intelligence</span>
           </div>
-        </div>`;
-      return;
-    }
+        </a>
+        <nav class="site-nav" aria-label="Main navigation">
+          <a href="index.html">Home</a>
+          <a class="active" href="dashboards.html">Dashboards</a>
+        </nav>
+      </div>
+    </header>
 
-    if (title) title.textContent = item.name;
-    document.title = `${item.name} | Power BI Dashboard Portal`;
+    <main>
+      <section class="page-banner">
+        <div class="page-banner-inner">
+          <h1>Company Dashboards</h1>
+          <p>Select an available dashboard to open it in a full-page Power BI viewer. Dashboards without a configured URL remain clearly marked as not available.</p>
+        </div>
+      </section>
 
-    stage.innerHTML = "";
+      <section class="section">
+        <div class="dashboard-toolbar">
+          <label class="search-box">
+            <span class="search-icon">⌕</span>
+            <input id="dashboardSearch" type="search" placeholder="Search dashboards..." aria-label="Search dashboards">
+          </label>
+          <div class="count-pill" id="dashboardCount">20 dashboards</div>
+        </div>
 
-    const iframe = document.createElement("iframe");
-    iframe.title = item.name;
-    iframe.allowFullscreen = true;
-    iframe.setAttribute("allow", "fullscreen");
-    iframe.setAttribute("referrerpolicy", "strict-origin-when-cross-origin");
-    stage.appendChild(iframe);
-    setViewerSource(iframe, item.url);
+        <div class="dashboard-grid" id="dashboardGrid"></div>
+        <div class="empty-state" id="emptyState">No dashboard matches your search.</div>
+      </section>
+    </main>
 
-    let resizeTimer;
-    window.addEventListener("resize", function () {
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(function () {
-        setViewerSource(iframe, item.url);
-      }, 300);
-    });
-  }
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <div><strong>Power BI Dashboard Portal</strong> · Company Internal Analytics</div>
+        <div class="footer-credit">Designed by <span>Lean Academy Sri Lanka</span></div>
+      </div>
+    </footer>
+  </div>
 
-  document.addEventListener("DOMContentLoaded", function () {
-    renderDashboardCards();
-    loadViewer();
-  });
-})();
+  <script src="js/dashboard-config.js?v=20260805-6"></script>
+  <script src="js/app.js?v=20260805-6"></script>
+</body>
+</html>
