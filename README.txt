@@ -30,6 +30,13 @@ IMPORTANT POWER BI NOTE
 - Secure Power BI embed links may require each viewer to sign in and have permission.
 - A normal report-sharing URL may be blocked inside an iframe. Use an official Power BI embed URL.
 
+SMART TV DISPLAY NOTE
+---------------------
+- The portal JavaScript is written to avoid newer browser features so older Smart TV browsers have a better chance of loading the viewer.
+- If a dashboard remains blank on an Abans Smart TV, the TV browser may not support the Microsoft Power BI web application itself.
+- For the most reliable TV display, use a device with a modern browser, such as a mini PC, Android TV box, Chromecast, Fire TV device, or laptop connected by HDMI.
+- If the TV cannot run Power BI, use exported dashboard images or PDFs and display those in the website instead of embedding the live Power BI report.
+
 HOW TO OPEN LOCALLY
 -------------------
 Double-click index.html, or right-click it and open with a web browser.
