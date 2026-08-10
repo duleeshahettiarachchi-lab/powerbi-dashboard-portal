@@ -4,6 +4,8 @@
   1. Open this file in Visual Studio Code.
   2. Paste each Power BI embed URL inside the matching url: "..." field.
   3. Leave url: "" empty when a dashboard is not yet available.
+  4. Optional: add image: "images/file-name.png" to any dashboard to show
+     a hosted full-screen Live Image on TVs that cannot open Power BI.
 
   Recommended URL types:
   - Power BI "Publish to web" embed URL (public access)
