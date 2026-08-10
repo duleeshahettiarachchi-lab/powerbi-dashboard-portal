@@ -216,6 +216,31 @@ main { flex: 1; }
 .open-dashboard.enabled { background: var(--powerbi-yellow); color: var(--navy); }
 .open-dashboard.enabled:hover { background: #ffda35; }
 .open-dashboard.disabled { background: #e9eef3; color: #8996a5; cursor: not-allowed; }
+.image-upload,
+.live-image-link {
+  width: 100%;
+  min-height: 40px;
+  border-radius: 10px;
+  font-size: .82rem;
+  font-weight: 900;
+}
+.image-upload {
+  position: relative;
+  overflow: hidden;
+  background: #eef4fb;
+  color: var(--navy);
+  border: 1px solid #d3deea;
+}
+.image-upload:hover { background: #e2ebf5; }
+.live-image-link { background: var(--navy); color: #fff; }
+.live-image-link:hover { background: var(--blue); }
+.dashboard-image-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
 .empty-state { display: none; text-align: center; background:#fff; border:1px dashed #bfcbd7; border-radius:16px; padding:42px 20px; color:var(--muted); }
 
 .site-footer { background: #0b1d31; color: #aebfd0; border-top: 4px solid var(--powerbi-yellow); }
@@ -224,24 +249,48 @@ main { flex: 1; }
 .footer-credit { color: #e7edf4; }
 .footer-credit span { color: var(--powerbi-yellow); font-weight: 900; }
 
-.viewer-page { height: 100vh; overflow: hidden; background: #0a1b2e; }
-.viewer-shell { height: 100vh; display: grid; grid-template-rows: 64px 1fr; }
-.viewer-header { display:flex; align-items:center; justify-content:space-between; gap:16px; padding:0 18px; background:var(--navy); color:#fff; border-bottom:3px solid var(--powerbi-yellow); }
-.viewer-left { display:flex; align-items:center; min-width:0; gap:14px; }
-.back-link { width:38px; height:38px; display:grid; place-items:center; border-radius:10px; background:rgba(255,255,255,.1); color:#fff; font-size:1.3rem; }
-.back-link:hover { background:var(--powerbi-yellow); color:var(--navy); }
-.viewer-title { min-width:0; }
-.viewer-title strong { display:block; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
-.viewer-title span { display:block; margin-top:2px; color:#bdd0e1; font-size:.72rem; }
-.viewer-credit { font-size:.76rem; color:#d6e1ec; white-space:nowrap; }
-.viewer-credit span { color:var(--powerbi-yellow); font-weight:900; }
-.viewer-stage { min-height:0; position:relative; background:#fff; }
-.viewer-stage iframe { width:100%; height:100%; border:0; display:block; background:#fff; }
 .viewer-message { height:100%; display:grid; place-items:center; padding:30px; background:var(--surface-2); }
 .viewer-message-card { max-width:560px; padding:34px; text-align:center; border-radius:20px; border:1px solid var(--line); background:#fff; box-shadow:var(--shadow); }
 .viewer-message-icon { width:64px; height:64px; margin:0 auto; display:grid; place-items:center; border-radius:18px; background:#fff3b0; color:var(--navy); font-size:1.6rem; font-weight:900; }
 .viewer-message h1 { color:var(--navy); margin:18px 0 10px; }
 .viewer-message p { margin:0 0 22px; color:var(--muted); line-height:1.65; }
+.live-dashboard-image {
+  display: block;
+  width: 100vw;
+  height: 100vh;
+  object-fit: contain;
+  background: #ffffff;
+}
+.viewer-tools {
+  position: fixed;
+  right: 14px;
+  bottom: 14px;
+  z-index: 10;
+  display: flex;
+  gap: 8px;
+  opacity: .12;
+  transition: opacity .2s ease;
+}
+.viewer-tools:hover,
+.viewer-tools:focus-within {
+  opacity: 1;
+}
+.viewer-tool-btn {
+  position: relative;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 36px;
+  padding: 0 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,.28);
+  background: rgba(15,39,66,.86);
+  color: #fff;
+  font-size: .78rem;
+  font-weight: 900;
+  cursor: pointer;
+}
 
 @media (max-width: 1050px) {
   .dashboard-grid { grid-template-columns: repeat(3, 1fr); }
@@ -268,8 +317,6 @@ main { flex: 1; }
   .hero-panel { display:none; }
   .dashboard-toolbar { align-items:stretch; flex-direction:column; }
   .dashboard-grid { grid-template-columns: 1fr; }
-  .viewer-credit { display:none; }
-  .viewer-header { padding:0 10px; }
 }
 /* Power BI Information Section */
 
