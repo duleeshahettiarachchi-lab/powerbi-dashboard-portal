@@ -62,6 +62,31 @@
     return rawUrl;
   }
 
+  function getImageKey(id) {
+    return "dashboard-live-image-" + String(id);
+  }
+
+  function getStoredImage(id) {
+    try {
+      return window.localStorage.getItem(getImageKey(id));
+    } catch (error) {
+      return "";
+    }
+  }
+
+  function getDashboardImage(item) {
+    return getStoredImage(item.id) || trim(item.image || item.imageUrl);
+  }
+
+  function setStoredImage(id, value) {
+    try {
+      window.localStorage.setItem(getImageKey(id), value);
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
+
   function setText(node, value) {
     if (node) {
       node.innerText = value;
@@ -116,7 +141,7 @@
           + '    <p>' + escapeHtml(description) + '</p>'
           + '    <div class="card-action">'
           +        (available
-            ? '<a class="open-dashboard enabled btn" href="viewer.html?id=' + encodeURIComponent(item.id) + '&v=20260807-1">Open Dashboard &rarr;</a>'
+            ? '<a class="open-dashboard enabled btn" href="viewer.html?id=' + encodeURIComponent(item.id) + '&v=20260810-2">Open Dashboard &rarr;</a>'
             : '')
           + '    </div>'
           + '  </div>'
@@ -134,6 +159,76 @@
       search.onsearch = function () { draw(search.value); };
       search.onchange = function () { draw(search.value); };
     }
+  }
+
+  function bindImageUploads(root) {
+    var inputs = root.getElementsByTagName("input");
+    var i;
+
+    for (i = 0; i < inputs.length; i += 1) {
+      if (inputs[i].className.indexOf("dashboard-image-input") === -1) continue;
+
+      inputs[i].onchange = function () {
+        var input = this;
+        var id = input.getAttribute("data-dashboard-id");
+        var file = input.files && input.files[0];
+        var reader;
+
+        if (!file) return;
+
+        reader = new FileReader();
+        reader.onload = function () {
+          if (setStoredImage(id, String(reader.result || ""))) {
+            window.location.href = "viewer.html?id=" + encodeURIComponent(id) + "&mode=image&v=20260810-2";
+          } else {
+            window.alert("This image is too large for the browser storage. Please use a smaller PNG image.");
+          }
+        };
+        reader.readAsDataURL(file);
+      };
+    }
+  }
+
+  function renderViewerTools(stage, item) {
+    var id = item && item.id;
+
+    stage.insertAdjacentHTML("beforeend", ''
+      + '<div class="viewer-tools">'
+      + '  <a class="viewer-tool-btn" href="dashboards.html" title="Back to dashboards">Back</a>'
+      + '  <a class="viewer-tool-btn" href="viewer.html?id=' + encodeURIComponent(id) + '&mode=image&v=20260810-2" title="Open live image">Live Image</a>'
+      + '  <label class="viewer-tool-btn" title="Create or replace live image">Create Image'
+      + '    <input class="dashboard-image-input" type="file" accept="image/png,image/jpeg,image/webp" data-dashboard-id="' + escapeHtml(id) + '">'
+      + '  </label>'
+      + '</div>');
+    bindImageUploads(stage);
+  }
+
+  function renderImageViewer(stage, item, imageData) {
+    var id = item && item.id;
+    var name = item && item.name ? item.name : "Dashboard";
+
+    if (!imageData) {
+      stage.innerHTML = ''
+        + '<div class="viewer-message">'
+        + '  <div class="viewer-message-card">'
+        + '    <div class="viewer-message-icon">IMG</div>'
+        + '    <h1>No Live Image</h1>'
+        + '    <p>No PNG image has been created for ' + escapeHtml(name) + ' yet. Open the dashboard and use Create Image.</p>'
+        + '    <a class="btn btn-primary" href="dashboards.html">Back to Dashboards</a>'
+        + '  </div>'
+        + '</div>';
+      return;
+    }
+
+    stage.innerHTML = ''
+      + '<img class="live-dashboard-image" src="' + escapeHtml(imageData) + '" alt="' + escapeHtml(name) + '">'
+      + '<div class="viewer-tools">'
+      + '  <a class="viewer-tool-btn" href="dashboards.html" title="Back to dashboards">Back</a>'
+      + '  <label class="viewer-tool-btn" title="Replace live image">Replace'
+      + '    <input class="dashboard-image-input" type="file" accept="image/png,image/jpeg,image/webp" data-dashboard-id="' + escapeHtml(id) + '">'
+      + '  </label>'
+      + '</div>';
+    bindImageUploads(stage);
   }
 
   function showViewerMessage(stage, item, dashboardUrl) {
@@ -162,6 +257,8 @@
     var iframe;
     var dashboardUrl;
     var fallbackTimer;
+    var mode;
+    var imageData;
 
     if (!stage) return;
 
@@ -173,6 +270,16 @@
         item = config[i];
         break;
       }
+    }
+
+    mode = trim(getQueryParam("mode")).toLowerCase();
+    imageData = item ? getDashboardImage(item) : "";
+
+    if (item && mode === "image") {
+      if (title) setText(title, item.name);
+      document.title = item.name + " Live Image | Power BI Dashboard Portal";
+      renderImageViewer(stage, item, imageData);
+      return;
     }
 
     if (!item || !hasUrl(item)) {
@@ -209,10 +316,15 @@
     };
 
     stage.appendChild(iframe);
+    renderViewerTools(stage, item);
     iframe.src = dashboardUrl;
 
     fallbackTimer = window.setTimeout(function () {
-      showViewerMessage(stage, item, dashboardUrl);
+      if (imageData) {
+        renderImageViewer(stage, item, imageData);
+      } else {
+        showViewerMessage(stage, item, dashboardUrl);
+      }
     }, 18000);
   }
 
