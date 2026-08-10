@@ -10,6 +10,18 @@ css/styles.css             Website colours, layout and responsive design
 js/dashboard-config.js     Dashboard names, descriptions and Power BI URLs
 js/app.js                  Dashboard cards, search and viewer behaviour
 
+LIVE IMAGE FALLBACK
+-------------------
+1. Open dashboards.html.
+2. Open the required dashboard.
+3. Use the small Create Image control inside the viewer and select a PNG, JPG, or WEBP file.
+4. The selected image opens in viewer.html as a full-screen Live Image.
+5. Selecting a new image for the same dashboard replaces the previous image in that browser.
+
+For a separate Smart TV browser, browser-uploaded images are not shared from your PC.
+Upload the image file to your hosting folder and add an image path in js/dashboard-config.js, for example:
+{ id: 1, name: "Pasting Machine Dashboard", ..., image: "images/pasting-machine-dashboard.png" }
+
 HOW TO ADD A POWER BI DASHBOARD URL
 ----------------------------------
 1. Open the folder in Visual Studio Code.
