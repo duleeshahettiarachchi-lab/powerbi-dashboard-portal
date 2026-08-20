@@ -34,7 +34,7 @@
     return "";
   }
 
-  function appendPowerBiParam(url, name, value) {
+  function appendUrlParam(url, name, value) {
     var hash = "";
     var hashIndex = url.indexOf("#");
     var separator;
@@ -52,11 +52,11 @@
     return url + separator + encodeURIComponent(name) + "=" + encodeURIComponent(value) + hash;
   }
 
-  function buildPowerBiUrl(value) {
+  function buildDashboardUrl(value) {
     var rawUrl = trim(value);
 
     if (rawUrl.indexOf("powerbi.com") !== -1) {
-      rawUrl = appendPowerBiParam(rawUrl, "pageView", "fitToWidth");
+      rawUrl = appendUrlParam(rawUrl, "pageView", "fitToWidth");
     }
 
     return rawUrl;
@@ -141,7 +141,7 @@
           + '    <p>' + escapeHtml(description) + '</p>'
           + '    <div class="card-action">'
           +        (available
-            ? '<a class="open-dashboard enabled btn" href="viewer.html?id=' + encodeURIComponent(item.id) + '&v=20260810-2">Open Dashboard &rarr;</a>'
+            ? '<a class="open-dashboard enabled btn" href="viewer.html?id=' + encodeURIComponent(item.id) + '&v=20260820-1">Open Dashboard &rarr;</a>'
             : '')
           + '    </div>'
           + '  </div>'
@@ -179,7 +179,7 @@
         reader = new FileReader();
         reader.onload = function () {
           if (setStoredImage(id, String(reader.result || ""))) {
-            window.location.href = "viewer.html?id=" + encodeURIComponent(id) + "&mode=image&v=20260810-2";
+            window.location.href = "viewer.html?id=" + encodeURIComponent(id) + "&mode=image&v=20260820-1";
           } else {
             window.alert("This image is too large for the browser storage. Please use a smaller PNG image.");
           }
@@ -195,7 +195,7 @@
     stage.insertAdjacentHTML("beforeend", ''
       + '<div class="viewer-tools">'
       + '  <a class="viewer-tool-btn" href="dashboards.html" title="Back to dashboards">Back</a>'
-      + '  <a class="viewer-tool-btn" href="viewer.html?id=' + encodeURIComponent(id) + '&mode=image&v=20260810-2" title="Open live image">Live Image</a>'
+      + '  <a class="viewer-tool-btn" href="viewer.html?id=' + encodeURIComponent(id) + '&mode=image&v=20260820-1" title="Open live image">Live Image</a>'
       + '  <label class="viewer-tool-btn" title="Create or replace live image">Create Image'
       + '    <input class="dashboard-image-input" type="file" accept="image/png,image/jpeg,image/webp" data-dashboard-id="' + escapeHtml(id) + '">'
       + '  </label>'
@@ -231,21 +231,28 @@
     bindImageUploads(stage);
   }
 
-  function showViewerMessage(stage, item, dashboardUrl) {
+  function renderDirectViewer(stage, item, dashboardUrl, imageData) {
     var name = item && item.name ? item.name : "Dashboard";
-    var linkHtml = dashboardUrl
-      ? '<a class="btn btn-primary" href="' + escapeHtml(dashboardUrl) + '" target="_self">Open Directly</a>'
-      : '<a class="btn btn-primary" href="dashboards.html">Back to Dashboards</a>';
+    var id = item && item.id;
+    var imageHtml = imageData
+      ? '<a class="btn btn-secondary viewer-secondary-action" href="viewer.html?id=' + encodeURIComponent(id) + '&mode=image&v=20260820-1">View Saved Image</a>'
+      : '';
 
     stage.innerHTML = ''
       + '<div class="viewer-message">'
       + '  <div class="viewer-message-card">'
-      + '    <div class="viewer-message-icon">BI</div>'
+      + '    <div class="viewer-message-icon">' + escapeHtml(item.icon || "BI") + '</div>'
       + '    <h1>' + escapeHtml(name) + '</h1>'
-      + '    <p>If the dashboard stays blank on this TV, the TV browser may not support Power BI iframe viewing. Use the button below to open the Power BI page directly.</p>'
-      +      linkHtml
+      + '    <p>This portal opens the dashboard as a normal page because this dashboard provider blocks embedded viewing.</p>'
+      + '    <div class="viewer-actions">'
+      + '      <a class="btn btn-primary" href="' + escapeHtml(dashboardUrl) + '" target="_self">Open Dashboard</a>'
+      +        imageHtml
+      + '      <a class="btn btn-secondary viewer-secondary-action" href="dashboards.html">Back</a>'
+      + '    </div>'
       + '  </div>'
       + '</div>';
+
+    renderViewerTools(stage, item);
   }
 
   function loadViewer() {
@@ -254,9 +261,7 @@
     var item = null;
     var title;
     var i;
-    var iframe;
     var dashboardUrl;
-    var fallbackTimer;
     var mode;
     var imageData;
 
@@ -277,7 +282,7 @@
 
     if (item && mode === "image") {
       if (title) setText(title, item.name);
-      document.title = item.name + " Live Image | Power BI Dashboard Portal";
+      document.title = item.name + " Live Image | Dashboard Portal";
       renderImageViewer(stage, item, imageData);
       return;
     }
@@ -289,7 +294,7 @@
         + '  <div class="viewer-message-card">'
         + '    <div class="viewer-message-icon">BI</div>'
         + '    <h1>Dashboard Not Available</h1>'
-        + '    <p>No Power BI URL has been added for this dashboard. Add the URL in <strong>js/dashboard-config.js</strong> and open it again.</p>'
+        + '    <p>No dashboard URL has been added for this dashboard. Add the URL in <strong>js/dashboard-config.js</strong> and open it again.</p>'
         + '    <a class="btn btn-primary" href="dashboards.html">Back to Dashboards</a>'
         + '  </div>'
         + '</div>';
@@ -297,35 +302,10 @@
     }
 
     if (title) setText(title, item.name);
-    document.title = item.name + " | Power BI Dashboard Portal";
+    document.title = item.name + " | Dashboard Portal";
 
-    dashboardUrl = buildPowerBiUrl(item.url);
-    stage.innerHTML = "";
-
-    iframe = document.createElement("iframe");
-    iframe.title = item.name;
-    iframe.frameBorder = "0";
-    iframe.allowFullscreen = true;
-    iframe.setAttribute("allowfullscreen", "true");
-    iframe.setAttribute("allow", "fullscreen");
-
-    iframe.onload = function () {
-      if (fallbackTimer) {
-        window.clearTimeout(fallbackTimer);
-      }
-    };
-
-    stage.appendChild(iframe);
-    renderViewerTools(stage, item);
-    iframe.src = dashboardUrl;
-
-    fallbackTimer = window.setTimeout(function () {
-      if (imageData) {
-        renderImageViewer(stage, item, imageData);
-      } else {
-        showViewerMessage(stage, item, dashboardUrl);
-      }
-    }, 18000);
+    dashboardUrl = buildDashboardUrl(item.url);
+    renderDirectViewer(stage, item, dashboardUrl, imageData);
   }
 
   function ready(callback) {
