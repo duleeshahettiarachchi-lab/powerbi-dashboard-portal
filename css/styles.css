@@ -254,6 +254,9 @@ main { flex: 1; }
 .viewer-message-icon { width:64px; height:64px; margin:0 auto; display:grid; place-items:center; border-radius:18px; background:#fff3b0; color:var(--navy); font-size:1.6rem; font-weight:900; }
 .viewer-message h1 { color:var(--navy); margin:18px 0 10px; }
 .viewer-message p { margin:0 0 22px; color:var(--muted); line-height:1.65; }
+.viewer-actions { display:flex; flex-wrap:wrap; justify-content:center; gap:10px; }
+.viewer-secondary-action { background:#eef4fb; color:var(--navy); border:1px solid #d3deea; box-shadow:none; }
+.viewer-secondary-action:hover { background:#e2ebf5; }
 .live-dashboard-image {
   display: block;
   width: 100vw;
