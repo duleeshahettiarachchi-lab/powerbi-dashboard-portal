@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Official company dashboard portal.">
-  <title>Home | Dashboard Portal</title>
+  <meta name="description" content="Company dashboards.">
+  <title>Dashboards | Dashboard Portal</title>
   <link rel="stylesheet" href="css/styles.css?v=20260820-1">
 </head>
 <body>
@@ -19,93 +19,31 @@
           </div>
         </a>
         <nav class="site-nav" aria-label="Main navigation">
-          <a class="active" href="index.html">Home</a>
-          <a href="dashboards.html">Dashboards</a>
+          <a href="index.html">Home</a>
+          <a class="active" href="dashboards.html">Dashboards</a>
         </nav>
       </div>
     </header>
 
     <main>
-      <section class="hero">
-        <div class="hero-inner">
-          <div>
-            <div class="eyebrow"><span class="eyebrow-dot"></span> Official Analytics Portal</div>
-            <h1>One secure place for every <span>company dashboard.</span></h1>
-            <p>Access operational, quality, maintenance and management dashboards from one simple company portal. Dashboards with configured links open directly in the browser.</p>
-            <div class="hero-actions">
-              <a class="btn btn-primary" href="dashboards.html">View Dashboards →</a>
-              <a class="btn btn-secondary" href="#about">About the Portal</a>
-            </div>
-          </div>
-
-          <div class="hero-panel" aria-hidden="true">
-            <div class="mock-window">
-              <div class="mock-topbar"><span class="mock-dot"></span><span class="mock-dot"></span><span class="mock-dot"></span></div>
-              <div class="mock-screen">
-                <div class="mock-title"></div>
-                <div class="mock-subtitle"></div>
-                <div class="mock-kpis"><div class="mock-kpi"></div><div class="mock-kpi"></div><div class="mock-kpi"></div></div>
-                <div class="mock-chart"><span></span><span></span><span></span><span></span><span></span><span></span></div>
-              </div>
-            </div>
-          </div>
+      <section class="page-banner">
+        <div class="page-banner-inner">
+          <h1>Company Dashboards</h1>
+          <p>Select an available dashboard to open it directly. Dashboards without a configured URL remain clearly marked as not available.</p>
         </div>
       </section>
 
-      <section class="section" id="about">
-    <div class="section-heading">
-        <div>
-            <h2>Power BI for Manufacturing</h2>
-            <p>
-                Transforming operational data into clear information for performance
-                monitoring and fact-based decision-making.
-            </p>
+      <section class="section">
+        <div class="dashboard-toolbar">
+          <label class="search-box">
+            <span class="search-icon">⌕</span>
+            <input id="dashboardSearch" type="search" placeholder="Search dashboards..." aria-label="Search dashboards">
+          </label>
+          <div class="count-pill" id="dashboardCount">20 dashboards</div>
         </div>
-    </div>
 
-    <div class="feature-grid powerbi-info-grid">
-
-    <article class="feature-card powerbi-info-card">
-        <h3>What Is a Power BI Dashboard?</h3>
-
-        <p>
-            A Power BI dashboard is an interactive digital platform that converts
-            data from different sources into clear charts, graphs, indicators,
-            and reports. It helps users understand current performance, identify
-            trends, and monitor important Key Performance Indicators (KPIs) in
-            one place.
-        </p>
-    </article>
-
-    <article class="feature-card powerbi-info-card">
-        <h3>Use of Power BI in Manufacturing</h3>
-
-        <p>
-            In manufacturing, Power BI can be used to monitor production output,
-            machine efficiency, downtime, quality defects, material usage,
-            inventory levels, maintenance performance, delivery status, and
-            Overall Equipment Effectiveness (OEE). It can combine real-time and
-            historical data from machines, production systems, Excel files, ERP
-            systems, and other databases.
-        </p>
-    </article>
-
-    <article class="feature-card powerbi-info-card">
-        <h3>Support for Decision-Making</h3>
-
-        <p>
-            Power BI supports faster and more accurate decision-making by
-            presenting reliable data in an easy-to-understand format. Managers
-            can quickly identify production delays, abnormal machine conditions,
-            quality issues, high costs, and performance gaps. This allows them
-            to take corrective action, allocate resources effectively, reduce
-            waste, improve productivity, and make decisions based on facts
-            rather than assumptions.
-        </p>
-    </article>
-
-</div>
-</section>
+        <div class="dashboard-grid" id="dashboardGrid"></div>
+        <div class="empty-state" id="emptyState">No dashboard matches your search.</div>
       </section>
     </main>
 
@@ -116,5 +54,8 @@
       </div>
     </footer>
   </div>
+
+  <script src="js/dashboard-config.js?v=20260820-1"></script>
+  <script src="js/app.js?v=20260820-1"></script>
 </body>
 </html>
