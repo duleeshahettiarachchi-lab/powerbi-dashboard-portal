@@ -275,8 +275,8 @@ main { flex: 1; }
 }
 .dashboard-frame {
   display: block;
-  width: 100vw;
-  height: 100vh;
+  width: min(100vw, 177.78vh);
+  height: min(100vh, 56.25vw);
   border: 0;
   background: #ffffff;
 }
@@ -310,19 +310,6 @@ main { flex: 1; }
   font-weight: 900;
   cursor: pointer;
 }
-.viewer-open-link {
-  position: fixed;
-  left: 14px;
-  bottom: 14px;
-  z-index: 10;
-  opacity: .12;
-  transition: opacity .2s ease;
-}
-.viewer-open-link:hover,
-.viewer-open-link:focus {
-  opacity: 1;
-}
-
 @media (max-width: 1050px) {
   .dashboard-grid { grid-template-columns: repeat(3, 1fr); }
   .hero-inner { grid-template-columns: 1fr 1fr; gap: 35px; }
@@ -348,10 +335,6 @@ main { flex: 1; }
   .hero-panel { display:none; }
   .dashboard-toolbar { align-items:stretch; flex-direction:column; }
   .dashboard-grid { grid-template-columns: 1fr; }
-  .dashboard-frame {
-    width: 100vw;
-    height: min(100vh, 62vw);
-  }
 }
 /* Power BI Information Section */
 
