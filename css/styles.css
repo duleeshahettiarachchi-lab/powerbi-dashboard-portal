@@ -275,8 +275,8 @@ main { flex: 1; }
 }
 .dashboard-frame {
   display: block;
-  width: min(100vw, 177.78vh);
-  height: min(100vh, 56.25vw);
+  width: 100vw;
+  height: 100vh;
   border: 0;
   background: #ffffff;
 }
