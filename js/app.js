@@ -62,10 +62,6 @@
     return rawUrl;
   }
 
-  function isPowerBiUrl(value) {
-    return trim(value).indexOf("powerbi.com") !== -1;
-  }
-
   function getImageKey(id) {
     return "dashboard-live-image-" + String(id);
   }
@@ -145,7 +141,7 @@
           + '    <p>' + escapeHtml(description) + '</p>'
           + '    <div class="card-action">'
           +        (available
-            ? '<a class="open-dashboard enabled btn" href="viewer.html?id=' + encodeURIComponent(item.id) + '&v=20260821-3">Open Dashboard &rarr;</a>'
+            ? '<a class="open-dashboard enabled btn" href="viewer.html?id=' + encodeURIComponent(item.id) + '&v=20260821-4">Open Dashboard &rarr;</a>'
             : '')
           + '    </div>'
           + '  </div>'
@@ -183,7 +179,7 @@
         reader = new FileReader();
         reader.onload = function () {
           if (setStoredImage(id, String(reader.result || ""))) {
-            window.location.href = "viewer.html?id=" + encodeURIComponent(id) + "&mode=image&v=20260821-3";
+            window.location.href = "viewer.html?id=" + encodeURIComponent(id) + "&mode=image&v=20260821-4";
           } else {
             window.alert("This image is too large for the browser storage. Please use a smaller PNG image.");
           }
@@ -199,7 +195,7 @@
     stage.insertAdjacentHTML("beforeend", ''
       + '<div class="viewer-tools">'
       + '  <a class="viewer-tool-btn" href="dashboards.html" title="Back to dashboards">Back</a>'
-      + '  <a class="viewer-tool-btn" href="viewer.html?id=' + encodeURIComponent(id) + '&mode=image&v=20260821-3" title="Open live image">Live Image</a>'
+      + '  <a class="viewer-tool-btn" href="viewer.html?id=' + encodeURIComponent(id) + '&mode=image&v=20260821-4" title="Open live image">Live Image</a>'
       + '  <label class="viewer-tool-btn" title="Create or replace live image">Create Image'
       + '    <input class="dashboard-image-input" type="file" accept="image/png,image/jpeg,image/webp" data-dashboard-id="' + escapeHtml(id) + '">'
       + '  </label>'
@@ -235,30 +231,6 @@
     bindImageUploads(stage);
   }
 
-  function renderDirectViewer(stage, item, dashboardUrl, imageData) {
-    var name = item && item.name ? item.name : "Dashboard";
-    var id = item && item.id;
-    var imageHtml = imageData
-      ? '<a class="btn btn-secondary viewer-secondary-action" href="viewer.html?id=' + encodeURIComponent(id) + '&mode=image&v=20260821-3">View Saved Image</a>'
-      : '';
-
-    stage.innerHTML = ''
-      + '<div class="viewer-message">'
-      + '  <div class="viewer-message-card">'
-      + '    <div class="viewer-message-icon">' + escapeHtml(item.icon || "BI") + '</div>'
-      + '    <h1>' + escapeHtml(name) + '</h1>'
-      + '    <p>This portal opens the dashboard as a normal page because this dashboard provider blocks embedded viewing.</p>'
-      + '    <div class="viewer-actions">'
-      + '      <a class="btn btn-primary" href="' + escapeHtml(dashboardUrl) + '" target="_self">Open Dashboard</a>'
-      +        imageHtml
-      + '      <a class="btn btn-secondary viewer-secondary-action" href="dashboards.html">Back</a>'
-      + '    </div>'
-      + '  </div>'
-      + '</div>';
-
-    renderViewerTools(stage, item);
-  }
-
   function renderEmbeddedViewer(stage, item, dashboardUrl) {
     var name = item && item.name ? item.name : "Dashboard";
 
@@ -277,7 +249,6 @@
     var i;
     var dashboardUrl;
     var mode;
-    var imageData;
 
     if (!stage) return;
 
@@ -292,12 +263,10 @@
     }
 
     mode = trim(getQueryParam("mode")).toLowerCase();
-    imageData = item ? getDashboardImage(item) : "";
-
     if (item && mode === "image") {
       if (title) setText(title, item.name);
       document.title = item.name + " Live Image | Dashboard Portal";
-      renderImageViewer(stage, item, imageData);
+      renderImageViewer(stage, item, getDashboardImage(item));
       return;
     }
 
@@ -319,11 +288,7 @@
     document.title = item.name + " | Dashboard Portal";
 
     dashboardUrl = buildDashboardUrl(item.url);
-    if (isPowerBiUrl(item.url)) {
-      renderEmbeddedViewer(stage, item, dashboardUrl);
-    } else {
-      renderDirectViewer(stage, item, dashboardUrl, imageData);
-    }
+    renderEmbeddedViewer(stage, item, dashboardUrl);
   }
 
   function ready(callback) {
