@@ -141,7 +141,7 @@
           + '    <p>' + escapeHtml(description) + '</p>'
           + '    <div class="card-action">'
           +        (available
-            ? '<a class="open-dashboard enabled btn" href="viewer.html?id=' + encodeURIComponent(item.id) + '&v=20260820-1">Open Dashboard &rarr;</a>'
+            ? '<a class="open-dashboard enabled btn" href="viewer.html?id=' + encodeURIComponent(item.id) + '&v=20260821-1">Open Dashboard &rarr;</a>'
             : '')
           + '    </div>'
           + '  </div>'
@@ -179,7 +179,7 @@
         reader = new FileReader();
         reader.onload = function () {
           if (setStoredImage(id, String(reader.result || ""))) {
-            window.location.href = "viewer.html?id=" + encodeURIComponent(id) + "&mode=image&v=20260820-1";
+            window.location.href = "viewer.html?id=" + encodeURIComponent(id) + "&mode=image&v=20260821-1";
           } else {
             window.alert("This image is too large for the browser storage. Please use a smaller PNG image.");
           }
@@ -195,7 +195,7 @@
     stage.insertAdjacentHTML("beforeend", ''
       + '<div class="viewer-tools">'
       + '  <a class="viewer-tool-btn" href="dashboards.html" title="Back to dashboards">Back</a>'
-      + '  <a class="viewer-tool-btn" href="viewer.html?id=' + encodeURIComponent(id) + '&mode=image&v=20260820-1" title="Open live image">Live Image</a>'
+      + '  <a class="viewer-tool-btn" href="viewer.html?id=' + encodeURIComponent(id) + '&mode=image&v=20260821-1" title="Open live image">Live Image</a>'
       + '  <label class="viewer-tool-btn" title="Create or replace live image">Create Image'
       + '    <input class="dashboard-image-input" type="file" accept="image/png,image/jpeg,image/webp" data-dashboard-id="' + escapeHtml(id) + '">'
       + '  </label>'
@@ -235,7 +235,7 @@
     var name = item && item.name ? item.name : "Dashboard";
     var id = item && item.id;
     var imageHtml = imageData
-      ? '<a class="btn btn-secondary viewer-secondary-action" href="viewer.html?id=' + encodeURIComponent(id) + '&mode=image&v=20260820-1">View Saved Image</a>'
+      ? '<a class="btn btn-secondary viewer-secondary-action" href="viewer.html?id=' + encodeURIComponent(id) + '&mode=image&v=20260821-1">View Saved Image</a>'
       : '';
 
     stage.innerHTML = ''
