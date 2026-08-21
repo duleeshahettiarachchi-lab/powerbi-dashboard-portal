@@ -56,10 +56,14 @@
     var rawUrl = trim(value);
 
     if (rawUrl.indexOf("powerbi.com") !== -1) {
-      rawUrl = appendUrlParam(rawUrl, "pageView", "fitToWidth");
+      rawUrl = appendUrlParam(rawUrl, "pageView", "fitToPage");
     }
 
     return rawUrl;
+  }
+
+  function isPowerBiUrl(value) {
+    return trim(value).indexOf("powerbi.com") !== -1;
   }
 
   function getImageKey(id) {
@@ -141,7 +145,7 @@
           + '    <p>' + escapeHtml(description) + '</p>'
           + '    <div class="card-action">'
           +        (available
-            ? '<a class="open-dashboard enabled btn" href="viewer.html?id=' + encodeURIComponent(item.id) + '&v=20260821-1">Open Dashboard &rarr;</a>'
+            ? '<a class="open-dashboard enabled btn" href="viewer.html?id=' + encodeURIComponent(item.id) + '&v=20260821-2">Open Dashboard &rarr;</a>'
             : '')
           + '    </div>'
           + '  </div>'
@@ -179,7 +183,7 @@
         reader = new FileReader();
         reader.onload = function () {
           if (setStoredImage(id, String(reader.result || ""))) {
-            window.location.href = "viewer.html?id=" + encodeURIComponent(id) + "&mode=image&v=20260821-1";
+            window.location.href = "viewer.html?id=" + encodeURIComponent(id) + "&mode=image&v=20260821-2";
           } else {
             window.alert("This image is too large for the browser storage. Please use a smaller PNG image.");
           }
@@ -195,7 +199,7 @@
     stage.insertAdjacentHTML("beforeend", ''
       + '<div class="viewer-tools">'
       + '  <a class="viewer-tool-btn" href="dashboards.html" title="Back to dashboards">Back</a>'
-      + '  <a class="viewer-tool-btn" href="viewer.html?id=' + encodeURIComponent(id) + '&mode=image&v=20260821-1" title="Open live image">Live Image</a>'
+      + '  <a class="viewer-tool-btn" href="viewer.html?id=' + encodeURIComponent(id) + '&mode=image&v=20260821-2" title="Open live image">Live Image</a>'
       + '  <label class="viewer-tool-btn" title="Create or replace live image">Create Image'
       + '    <input class="dashboard-image-input" type="file" accept="image/png,image/jpeg,image/webp" data-dashboard-id="' + escapeHtml(id) + '">'
       + '  </label>'
@@ -235,7 +239,7 @@
     var name = item && item.name ? item.name : "Dashboard";
     var id = item && item.id;
     var imageHtml = imageData
-      ? '<a class="btn btn-secondary viewer-secondary-action" href="viewer.html?id=' + encodeURIComponent(id) + '&mode=image&v=20260821-1">View Saved Image</a>'
+      ? '<a class="btn btn-secondary viewer-secondary-action" href="viewer.html?id=' + encodeURIComponent(id) + '&mode=image&v=20260821-2">View Saved Image</a>'
       : '';
 
     stage.innerHTML = ''
@@ -253,6 +257,19 @@
       + '</div>';
 
     renderViewerTools(stage, item);
+  }
+
+  function renderEmbeddedViewer(stage, item, dashboardUrl) {
+    var name = item && item.name ? item.name : "Dashboard";
+
+    stage.innerHTML = ''
+      + '<div class="dashboard-frame-wrap">'
+      + '  <iframe class="dashboard-frame" src="' + escapeHtml(dashboardUrl) + '" title="' + escapeHtml(name) + '" allowfullscreen></iframe>'
+      + '</div>';
+
+    renderViewerTools(stage, item);
+    stage.insertAdjacentHTML("beforeend", ''
+      + '<a class="viewer-tool-btn viewer-open-link" href="' + escapeHtml(dashboardUrl) + '" target="_self" title="Open directly">Open Direct</a>');
   }
 
   function loadViewer() {
@@ -305,7 +322,11 @@
     document.title = item.name + " | Dashboard Portal";
 
     dashboardUrl = buildDashboardUrl(item.url);
-    renderDirectViewer(stage, item, dashboardUrl, imageData);
+    if (isPowerBiUrl(item.url)) {
+      renderEmbeddedViewer(stage, item, dashboardUrl);
+    } else {
+      renderDirectViewer(stage, item, dashboardUrl, imageData);
+    }
   }
 
   function ready(callback) {
