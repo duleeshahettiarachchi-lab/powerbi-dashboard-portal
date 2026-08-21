@@ -16,7 +16,7 @@
 window.DASHBOARD_CONFIG = [
   { id: 1,  name: "Pasting Machine Dashboard",  description: "Production, quality, downtime and OEE monitoring for the pasting process.", icon: "PM", url: "https://app.powerbi.com/view?r=eyJrIjoiMjkwNjAzMjAtMjEyMi00ODc2LWFjZmItNDE3YzdmNTdiNzE1IiwidCI6ImJkMGIxZmU0LTcwZmEtNGE5MS1iMDI4LWE2MDA1NGQ5MTYyNSIsImMiOjEwfQ%3D%3D" },
   { id: 2,  name: "Casting Machine Dashboard", description: "Casting output, defects, process performance and machine status.", icon: "CM", url: "https://app.powerbi.com/view?r=eyJrIjoiODA0ODdjZDYtMzkwNi00OTI0LWJiZjAtOWFjMDE0OWJiYmRiIiwidCI6ImJkMGIxZmU0LTcwZmEtNGE5MS1iMDI4LWE2MDA1NGQ5MTYyNSIsImMiOjEwfQ%3D%3D" },
-  { id: 3,  name: "Assembly Line Dashboard",   description: "Assembly line 01 performance, productivity, quality and daily targets.", icon: "AL", url: "https://app.powerbi.com/view?r=eyJrIjoiZGExYjVmMWEtZGY5OC00NDliLTg2M2ItMmQwZGRhMzIxODgyIiwidCI6ImJkMGIxZmU0LTcwZmEtNGE5MS1iMDI4LWE2MDA1NGQ5MTYyNSIsImMiOjEwfQ%3D%3D"},
+  { id: 3,  name: "Assembly Line 01 Dashboard", description: "Assembly line 01 performance, productivity, quality and daily targets.", icon: "AL", url: "https://app.powerbi.com/view?r=eyJrIjoiZGExYjVmMWEtZGY5OC00NDliLTg2M2ItMmQwZGRhMzIxODgyIiwidCI6ImJkMGIxZmU0LTcwZmEtNGE5MS1iMDI4LWE2MDA1NGQ5MTYyNSIsImMiOjEwfQ%3D%3D" },
   { id: 4,  name: "Formation Dashboard",       description: "Formation process monitoring and operational performance.", icon: "FD", url: "" },
   { id: 5,  name: "Charging Dashboard",        description: "Charging process status, capacity and production indicators.", icon: "CH", url: "" },
   { id: 6,  name: "Quality Dashboard",         description: "Quality results, defects, trends and corrective-action visibility.", icon: "QD", url: "" },
