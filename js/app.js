@@ -141,7 +141,7 @@
           + '    <p>' + escapeHtml(description) + '</p>'
           + '    <div class="card-action">'
           +        (available
-            ? '<a class="open-dashboard enabled btn" href="viewer.html?id=' + encodeURIComponent(item.id) + '&v=20260821-5">Open Dashboard &rarr;</a>'
+            ? '<a class="open-dashboard enabled btn" href="viewer.html?id=' + encodeURIComponent(item.id) + '&v=20260831-1">Open Dashboard &rarr;</a>'
             : '')
           + '    </div>'
           + '  </div>'
@@ -179,7 +179,7 @@
         reader = new FileReader();
         reader.onload = function () {
           if (setStoredImage(id, String(reader.result || ""))) {
-            window.location.href = "viewer.html?id=" + encodeURIComponent(id) + "&mode=image&v=20260821-5";
+            window.location.href = "viewer.html?id=" + encodeURIComponent(id) + "&mode=image&v=20260831-1";
           } else {
             window.alert("This image is too large for the browser storage. Please use a smaller PNG image.");
           }
@@ -195,7 +195,7 @@
     stage.insertAdjacentHTML("beforeend", ''
       + '<div class="viewer-tools">'
       + '  <a class="viewer-tool-btn" href="dashboards.html" title="Back to dashboards">Back</a>'
-      + '  <a class="viewer-tool-btn" href="viewer.html?id=' + encodeURIComponent(id) + '&mode=image&v=20260821-5" title="Open live image">Live Image</a>'
+      + '  <a class="viewer-tool-btn" href="viewer.html?id=' + encodeURIComponent(id) + '&mode=image&v=20260831-1" title="Open live image">Live Image</a>'
       + '  <label class="viewer-tool-btn" title="Create or replace live image">Create Image'
       + '    <input class="dashboard-image-input" type="file" accept="image/png,image/jpeg,image/webp" data-dashboard-id="' + escapeHtml(id) + '">'
       + '  </label>'
@@ -239,6 +239,28 @@
       + '  <iframe class="dashboard-frame" src="' + escapeHtml(dashboardUrl) + '" title="' + escapeHtml(name) + '" allowfullscreen></iframe>'
       + '</div>';
 
+    sizePortraitDashboardFrame();
+  }
+
+  function sizePortraitDashboardFrame() {
+    var wrap = document.querySelector(".dashboard-frame-wrap");
+    var isPortraitPhone = window.matchMedia
+      && window.matchMedia("(max-width: 820px) and (orientation: portrait)").matches;
+    var viewportWidth = window.innerWidth || document.documentElement.clientWidth;
+    var viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+    var reportWidth = 1280;
+    var reportHeight = 720;
+    var scale;
+
+    if (!wrap) return;
+
+    if (!isPortraitPhone) {
+      wrap.style.removeProperty("--report-scale");
+      return;
+    }
+
+    scale = Math.min(viewportWidth / reportWidth, viewportHeight / reportHeight);
+    wrap.style.setProperty("--report-scale", String(scale));
   }
 
   function loadViewer() {
@@ -304,5 +326,7 @@
   ready(function () {
     renderDashboardCards();
     loadViewer();
+    window.addEventListener("resize", sizePortraitDashboardFrame, false);
+    window.addEventListener("orientationchange", sizePortraitDashboardFrame, false);
   });
 })();
