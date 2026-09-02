@@ -96,6 +96,54 @@
     }
   }
 
+  function getSelectedSlideIds() {
+    var raw;
+    var parsed;
+    var ids = {};
+    var i;
+
+    try {
+      raw = window.localStorage.getItem("dashboard-slideshow-selected");
+    } catch (error) {
+      raw = "";
+    }
+
+    if (!raw) return null;
+
+    try {
+      parsed = JSON.parse(raw);
+    } catch (error) {
+      return null;
+    }
+
+    if (Object.prototype.toString.call(parsed) !== "[object Array]") return null;
+
+    for (i = 0; i < parsed.length; i += 1) {
+      ids[String(parsed[i])] = true;
+    }
+
+    return ids;
+  }
+
+  function setSelectedSlideIds(ids) {
+    var values = [];
+    var key;
+
+    for (key in ids) {
+      if (Object.prototype.hasOwnProperty.call(ids, key) && ids[key]) {
+        values.push(Number(key));
+      }
+    }
+
+    values.sort(function (a, b) { return a - b; });
+
+    try {
+      window.localStorage.setItem("dashboard-slideshow-selected", JSON.stringify(values));
+    } catch (error) {
+      return;
+    }
+  }
+
   function getMonthName(monthNumber) {
     var names = [
       "January", "February", "March", "April", "May", "June",
@@ -332,8 +380,138 @@
     };
   }
 
+  function fillSlideshowSelectionControls(onSelectionChange) {
+    var panel = document.getElementById("slideshowSelectorPanel");
+    var menuButton = document.getElementById("slideshowMenuButton");
+    var closeButton = document.getElementById("closeSlideshowPanel");
+    var holder = document.getElementById("slideshowDashboardButtons");
+    var selectAll = document.getElementById("selectAllSlides");
+    var clearAll = document.getElementById("clearAllSlides");
+    var count = document.getElementById("slideshowSelectionCount");
+    var selected = getSelectedSlideIds();
+    var html = "";
+    var i;
+
+    if (!panel || !menuButton || !holder) return;
+
+    if (!selected) {
+      selected = {};
+      for (i = 0; i < config.length; i += 1) {
+        selected[String(config[i].id)] = true;
+      }
+      setSelectedSlideIds(selected);
+    }
+
+    function getSelectedCount() {
+      var total = 0;
+      var key;
+
+      for (key in selected) {
+        if (Object.prototype.hasOwnProperty.call(selected, key) && selected[key]) {
+          total += 1;
+        }
+      }
+
+      return total;
+    }
+
+    function updateSelectionCount() {
+      var total = getSelectedCount();
+
+      setText(count, total + " selected");
+    }
+
+    function saveAndRefresh() {
+      setSelectedSlideIds(selected);
+      updateSelectionCount();
+      if (typeof onSelectionChange === "function") {
+        onSelectionChange();
+      }
+    }
+
+    for (i = 0; i < config.length; i += 1) {
+      html += '<button class="slideshow-dashboard-choice" type="button" data-dashboard-id="' + escapeHtml(config[i].id) + '">'
+        + '<span>' + escapeHtml(String(config[i].id)) + '</span>'
+        + escapeHtml(config[i].name || "Dashboard")
+        + '</button>';
+    }
+
+    holder.innerHTML = html;
+
+    function syncButtons() {
+      var buttons = holder.querySelectorAll("[data-dashboard-id]");
+      var j;
+
+      for (j = 0; j < buttons.length; j += 1) {
+        var id = buttons[j].getAttribute("data-dashboard-id");
+        if (selected[id]) {
+          buttons[j].className = "slideshow-dashboard-choice selected";
+          buttons[j].setAttribute("aria-pressed", "true");
+        } else {
+          buttons[j].className = "slideshow-dashboard-choice";
+          buttons[j].setAttribute("aria-pressed", "false");
+        }
+      }
+    }
+
+    holder.onclick = function (event) {
+      var target = event.target;
+
+      while (target && target !== holder && !target.getAttribute("data-dashboard-id")) {
+        target = target.parentNode;
+      }
+
+      if (!target || target === holder) return;
+
+      selected[target.getAttribute("data-dashboard-id")] = !selected[target.getAttribute("data-dashboard-id")];
+      syncButtons();
+      saveAndRefresh();
+    };
+
+    menuButton.onclick = function () {
+      var isOpen = panel.className.indexOf(" open") !== -1;
+      panel.className = isOpen
+        ? panel.className.replace(/\s*open/g, "")
+        : panel.className.replace(/\s*open/g, "") + " open";
+      menuButton.setAttribute("aria-expanded", isOpen ? "false" : "true");
+    };
+
+    if (closeButton) {
+      closeButton.onclick = function () {
+        panel.className = panel.className.replace(/\s*open/g, "");
+        menuButton.setAttribute("aria-expanded", "false");
+      };
+    }
+
+    if (selectAll) {
+      selectAll.onclick = function () {
+        var j;
+        for (j = 0; j < config.length; j += 1) {
+          selected[String(config[j].id)] = true;
+        }
+        syncButtons();
+        saveAndRefresh();
+      };
+    }
+
+    if (clearAll) {
+      clearAll.onclick = function () {
+        var j;
+        for (j = 0; j < config.length; j += 1) {
+          selected[String(config[j].id)] = false;
+        }
+        syncButtons();
+        saveAndRefresh();
+      };
+    }
+
+    syncButtons();
+    updateSelectionCount();
+  }
+
   function collectSlides() {
     var slides = [];
+    var selected = getSelectedSlideIds();
     var i;
 
     for (i = 0; i < config.length; i += 1) {
@@ -341,8 +519,10 @@
       var image = getStoredImage(item.id);
 
       if (!image) continue;
+      if (selected && !selected[String(item.id)]) continue;
 
       slides.push({
+        id: item.id,
         name: item.name || "Dashboard",
         image: image,
         period: getStoredPeriod(item.id)
@@ -369,29 +549,18 @@
     var activeNode;
     var pendingNode;
     var animating = false;
-    var controlsHideTimer = null;
+    var initialized = false;
 
     if (!stage) return;
 
-    slides = collectSlides();
-    if (!slides.length) {
-      document.body.className = document.body.className.replace(/\s*no-slideshow-slides/g, "") + " no-slideshow-slides";
-      return;
-    }
-
-    document.body.className = document.body.className.replace(/\s*no-slideshow-slides/g, "");
-    if (empty) empty.style.display = "none";
-    activeNode = document.createElement("img");
-    pendingNode = document.createElement("img");
-    activeNode.className = "slideshow-image active";
-    pendingNode.className = "slideshow-image";
-    activeNode.alt = "";
-    pendingNode.alt = "";
-    stage.appendChild(activeNode);
-    stage.appendChild(pendingNode);
-
     function updateMeta() {
       var slide = slides[current];
+
+      if (!slide) {
+        setText(title, "Slideshow");
+        setText(date, "No selected dashboard screenshot");
+        return;
+      }
 
       setText(title, slide.name);
       setText(date, slide.period ? "Report: " + slide.period : "Report period not set");
@@ -455,33 +624,68 @@
     }
 
     function move(offset) {
-      if (animating) return;
+      if (animating || !slides.length) return;
       current = (current + offset + slides.length) % slides.length;
       draw(offset < 0 ? -1 : 1);
       startTimer();
     }
 
-    function revealControls() {
-      if (document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement) {
-        return;
-      }
-
-      document.body.className = document.body.className.replace(/\s*show-slideshow-controls/g, "") + " show-slideshow-controls";
-      if (controlsHideTimer) window.clearTimeout(controlsHideTimer);
-      controlsHideTimer = window.setTimeout(function () {
-        document.body.className = document.body.className.replace(/\s*show-slideshow-controls/g, "");
-      }, 3500);
-    }
-
     function updateFullscreenState() {
       var fullscreenElement = document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement;
 
-      document.body.className = document.body.className.replace(/\s*show-slideshow-controls/g, "");
       document.body.className = document.body.className.replace(/\s*slideshow-fullscreen/g, "");
 
       if (fullscreenElement) {
         document.body.className += " slideshow-fullscreen";
       }
+    }
+
+    function ensureSlideNodes() {
+      if (initialized) return;
+
+      activeNode = document.createElement("img");
+      pendingNode = document.createElement("img");
+      activeNode.className = "slideshow-image active";
+      pendingNode.className = "slideshow-image";
+      activeNode.alt = "";
+      pendingNode.alt = "";
+      stage.appendChild(activeNode);
+      stage.appendChild(pendingNode);
+      initialized = true;
+    }
+
+    function refreshSlides() {
+      var oldSlide = slides && slides[current];
+      var i;
+
+      stopTimer();
+      slides = collectSlides();
+
+      if (!slides.length) {
+        document.body.className = document.body.className.replace(/\s*no-slideshow-slides/g, "") + " no-slideshow-slides";
+        if (empty) empty.style.display = "grid";
+        if (activeNode) activeNode.removeAttribute("src");
+        if (pendingNode) pendingNode.removeAttribute("src");
+        updateMeta();
+        return;
+      }
+
+      document.body.className = document.body.className.replace(/\s*no-slideshow-slides/g, "");
+      if (empty) empty.style.display = "none";
+      ensureSlideNodes();
+
+      current = 0;
+      if (oldSlide) {
+        for (i = 0; i < slides.length; i += 1) {
+          if (String(slides[i].id) === String(oldSlide.id)) {
+            current = i;
+            break;
+          }
+        }
+      }
+
+      drawInitial();
+      startTimer();
     }
 
     if (secondsInput) {
@@ -527,12 +731,9 @@
     document.addEventListener("fullscreenchange", updateFullscreenState, false);
     document.addEventListener("webkitfullscreenchange", updateFullscreenState, false);
     document.addEventListener("MSFullscreenChange", updateFullscreenState, false);
-    document.addEventListener("mousemove", revealControls, false);
-    document.addEventListener("touchstart", revealControls, false);
-    document.addEventListener("keydown", revealControls, false);
 
-    drawInitial();
-    startTimer();
+    fillSlideshowSelectionControls(refreshSlides);
+    refreshSlides();
   }
 
   function ready(callback) {
