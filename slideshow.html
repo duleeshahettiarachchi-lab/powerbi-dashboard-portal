@@ -9,23 +9,6 @@
 </head>
 <body class="slideshow-page">
   <div class="site-shell slideshow-shell">
-    <header class="site-header slideshow-header">
-      <div class="header-inner">
-        <a class="brand" href="index.html" aria-label="Dashboard Portal Home">
-          <div class="brand-mark">BI</div>
-          <div class="brand-copy">
-            <strong>Dashboard Portal</strong>
-            <span>Company performance intelligence</span>
-          </div>
-        </a>
-        <nav class="site-nav" aria-label="Main navigation">
-          <a href="index.html">Home</a>
-          <a href="dashboards.html">Dashboards</a>
-          <a class="active" href="slideshow.html">Slideshow</a>
-        </nav>
-      </div>
-    </header>
-
     <main class="slideshow-main">
       <section class="slideshow-stage" id="slideshowStage">
         <div class="slideshow-empty" id="slideshowEmpty">
@@ -38,54 +21,69 @@
         </div>
       </section>
 
-      <section class="slideshow-upload-panel" id="slideshowUploadPanel" aria-label="Upload dashboard screenshot">
-        <label>
-          <span>Dashboard</span>
-          <select id="slideshowDashboardSelect" aria-label="Dashboard"></select>
-        </label>
-        <label>
-          <span>Year</span>
-          <input id="slideshowYear" type="number" min="2020" max="2100" value="2026" aria-label="Report year">
-        </label>
-        <label>
-          <span>Month</span>
-          <select id="slideshowMonth" aria-label="Report month">
-            <option value="1">January</option>
-            <option value="2">February</option>
-            <option value="3">March</option>
-            <option value="4">April</option>
-            <option value="5">May</option>
-            <option value="6">June</option>
-            <option value="7">July</option>
-            <option value="8">August</option>
-            <option value="9">September</option>
-            <option value="10">October</option>
-            <option value="11">November</option>
-            <option value="12">December</option>
-          </select>
-        </label>
-        <label class="viewer-tool-btn slideshow-upload-btn">
-          Upload Screenshot
-          <input id="slideshowUploadInput" type="file" accept="image/png,image/jpeg,image/webp">
-        </label>
-      </section>
+      <button class="viewer-tool-btn slideshow-menu-button" type="button" id="slideshowMenuButton" aria-expanded="false" aria-controls="slideshowSelectorPanel">Dashboards</button>
 
-      <section class="slideshow-control-bar" aria-label="Slideshow controls">
-        <div class="slideshow-meta">
-          <strong id="slideshowTitle">Slideshow</strong>
-          <span id="slideshowDate">No dashboard screenshot</span>
+      <section class="slideshow-selector-panel" id="slideshowSelectorPanel" aria-label="Dashboard screenshot selection">
+        <div class="slideshow-panel-head">
+          <div>
+            <strong>Select Screenshots</strong>
+            <span id="slideshowSelectionCount">0 selected</span>
+          </div>
+          <button class="viewer-tool-btn" type="button" id="closeSlideshowPanel" title="Close dashboard selection">Close</button>
         </div>
-        <div class="slideshow-controls">
-          <button class="viewer-tool-btn" type="button" id="prevSlide" title="Previous slide">Previous</button>
-          <button class="viewer-tool-btn" type="button" id="playPauseSlide" title="Pause or play slideshow">Pause</button>
-          <button class="viewer-tool-btn" type="button" id="nextSlide" title="Next slide">Next</button>
-          <button class="viewer-tool-btn" type="button" id="fullscreenSlide" title="Full screen slideshow">Full Screen</button>
-          <label class="slideshow-timing">
-            <span>Seconds</span>
-            <input id="slideSeconds" type="number" min="3" max="300" step="1" value="10" aria-label="Slideshow time in seconds">
+        <div class="slideshow-selection-actions">
+          <button class="viewer-tool-btn" type="button" id="selectAllSlides">Select All</button>
+          <button class="viewer-tool-btn" type="button" id="clearAllSlides">Clear All</button>
+        </div>
+        <div class="slideshow-dashboard-buttons" id="slideshowDashboardButtons"></div>
+        <div class="slideshow-upload-form" aria-label="Upload dashboard screenshot">
+          <label>
+            <span>Dashboard</span>
+            <select id="slideshowDashboardSelect" aria-label="Dashboard"></select>
+          </label>
+          <label>
+            <span>Year</span>
+            <input id="slideshowYear" type="number" min="2020" max="2100" value="2026" aria-label="Report year">
+          </label>
+          <label>
+            <span>Month</span>
+            <select id="slideshowMonth" aria-label="Report month">
+              <option value="1">January</option>
+              <option value="2">February</option>
+              <option value="3">March</option>
+              <option value="4">April</option>
+              <option value="5">May</option>
+              <option value="6">June</option>
+              <option value="7">July</option>
+              <option value="8">August</option>
+              <option value="9">September</option>
+              <option value="10">October</option>
+              <option value="11">November</option>
+              <option value="12">December</option>
+            </select>
+          </label>
+          <label class="viewer-tool-btn slideshow-upload-btn">
+            Upload Screenshot
+            <input id="slideshowUploadInput" type="file" accept="image/png,image/jpeg,image/webp">
           </label>
         </div>
       </section>
+
+      <div class="slideshow-floating-meta" aria-live="polite">
+        <strong id="slideshowTitle">Slideshow</strong>
+        <span id="slideshowDate">No dashboard screenshot</span>
+      </div>
+
+      <div class="slideshow-floating-controls" aria-label="Slideshow controls">
+        <button class="viewer-tool-btn" type="button" id="prevSlide" title="Previous slide">Previous</button>
+        <button class="viewer-tool-btn" type="button" id="playPauseSlide" title="Pause or play slideshow">Pause</button>
+        <button class="viewer-tool-btn" type="button" id="nextSlide" title="Next slide">Next</button>
+        <button class="viewer-tool-btn" type="button" id="fullscreenSlide" title="Full screen slideshow">Full Screen</button>
+        <label class="slideshow-timing">
+          <span>Seconds</span>
+          <input id="slideSeconds" type="number" min="3" max="300" step="1" value="10" aria-label="Slideshow time in seconds">
+        </label>
+      </div>
     </main>
   </div>
 
