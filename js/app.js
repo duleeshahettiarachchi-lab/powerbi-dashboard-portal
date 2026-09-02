@@ -462,11 +462,26 @@
     }
 
     function revealControls() {
+      if (document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement) {
+        return;
+      }
+
       document.body.className = document.body.className.replace(/\s*show-slideshow-controls/g, "") + " show-slideshow-controls";
       if (controlsHideTimer) window.clearTimeout(controlsHideTimer);
       controlsHideTimer = window.setTimeout(function () {
         document.body.className = document.body.className.replace(/\s*show-slideshow-controls/g, "");
       }, 3500);
+    }
+
+    function updateFullscreenState() {
+      var fullscreenElement = document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement;
+
+      document.body.className = document.body.className.replace(/\s*show-slideshow-controls/g, "");
+      document.body.className = document.body.className.replace(/\s*slideshow-fullscreen/g, "");
+
+      if (fullscreenElement) {
+        document.body.className += " slideshow-fullscreen";
+      }
     }
 
     if (secondsInput) {
@@ -509,6 +524,9 @@
         }
       };
     }
+    document.addEventListener("fullscreenchange", updateFullscreenState, false);
+    document.addEventListener("webkitfullscreenchange", updateFullscreenState, false);
+    document.addEventListener("MSFullscreenChange", updateFullscreenState, false);
     document.addEventListener("mousemove", revealControls, false);
     document.addEventListener("touchstart", revealControls, false);
     document.addEventListener("keydown", revealControls, false);
