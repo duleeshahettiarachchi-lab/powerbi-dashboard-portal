@@ -512,6 +512,11 @@ body:has(.slideshow-stage:fullscreen) .slideshow-upload-panel,
 body:has(.slideshow-stage:fullscreen) .slideshow-control-bar {
   display: none;
 }
+body.slideshow-fullscreen .slideshow-header,
+body.slideshow-fullscreen .slideshow-upload-panel,
+body.slideshow-fullscreen .slideshow-control-bar {
+  display: none !important;
+}
 @media (max-width: 1050px) {
   .dashboard-grid { grid-template-columns: repeat(3, 1fr); }
   .hero-inner { grid-template-columns: 1fr 1fr; gap: 35px; }
