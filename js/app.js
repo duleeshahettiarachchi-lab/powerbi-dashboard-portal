@@ -63,7 +63,11 @@
   }
 
   function getImageKey(id) {
-    return "dashboard-live-image-" + String(id);
+    return "dashboard-slideshow-image-" + String(id);
+  }
+
+  function getPeriodKey(id) {
+    return "dashboard-slideshow-period-" + String(id);
   }
 
   function getStoredImage(id) {
@@ -74,17 +78,39 @@
     }
   }
 
-  function getDashboardImage(item) {
-    return getStoredImage(item.id) || trim(item.image || item.imageUrl);
+  function getStoredPeriod(id) {
+    try {
+      return window.localStorage.getItem(getPeriodKey(id));
+    } catch (error) {
+      return "";
+    }
   }
 
-  function setStoredImage(id, value) {
+  function setStoredSlide(id, image, period) {
     try {
-      window.localStorage.setItem(getImageKey(id), value);
+      window.localStorage.setItem(getImageKey(id), image);
+      window.localStorage.setItem(getPeriodKey(id), period);
       return true;
     } catch (error) {
       return false;
     }
+  }
+
+  function getMonthName(monthNumber) {
+    var names = [
+      "January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"
+    ];
+
+    return names[Math.max(0, Math.min(11, Number(monthNumber) - 1))];
+  }
+
+  function formatReportPeriod(year, month) {
+    year = Number(year);
+    month = Number(month);
+
+    if (!year || !month) return "";
+    return getMonthName(month) + "-" + String(year);
   }
 
   function setText(node, value) {
@@ -141,7 +167,7 @@
           + '    <p>' + escapeHtml(description) + '</p>'
           + '    <div class="card-action">'
           +        (available
-            ? '<a class="open-dashboard enabled btn" href="viewer.html?id=' + encodeURIComponent(item.id) + '&v=20260831-1">Open Dashboard &rarr;</a>'
+            ? '<a class="open-dashboard enabled btn" href="viewer.html?id=' + encodeURIComponent(item.id) + '&v=20260901-9">Open Dashboard &rarr;</a>'
             : '')
           + '    </div>'
           + '  </div>'
@@ -161,74 +187,14 @@
     }
   }
 
-  function bindImageUploads(root) {
-    var inputs = root.getElementsByTagName("input");
-    var i;
-
-    for (i = 0; i < inputs.length; i += 1) {
-      if (inputs[i].className.indexOf("dashboard-image-input") === -1) continue;
-
-      inputs[i].onchange = function () {
-        var input = this;
-        var id = input.getAttribute("data-dashboard-id");
-        var file = input.files && input.files[0];
-        var reader;
-
-        if (!file) return;
-
-        reader = new FileReader();
-        reader.onload = function () {
-          if (setStoredImage(id, String(reader.result || ""))) {
-            window.location.href = "viewer.html?id=" + encodeURIComponent(id) + "&mode=image&v=20260831-1";
-          } else {
-            window.alert("This image is too large for the browser storage. Please use a smaller PNG image.");
-          }
-        };
-        reader.readAsDataURL(file);
-      };
-    }
-  }
-
   function renderViewerTools(stage, item) {
     var id = item && item.id;
 
     stage.insertAdjacentHTML("beforeend", ''
       + '<div class="viewer-tools">'
       + '  <a class="viewer-tool-btn" href="dashboards.html" title="Back to dashboards">Back</a>'
-      + '  <a class="viewer-tool-btn" href="viewer.html?id=' + encodeURIComponent(id) + '&mode=image&v=20260831-1" title="Open live image">Live Image</a>'
-      + '  <label class="viewer-tool-btn" title="Create or replace live image">Create Image'
-      + '    <input class="dashboard-image-input" type="file" accept="image/png,image/jpeg,image/webp" data-dashboard-id="' + escapeHtml(id) + '">'
-      + '  </label>'
+      + '  <a class="viewer-tool-btn" href="slideshow.html" title="Open slideshow">Slideshow</a>'
       + '</div>');
-    bindImageUploads(stage);
-  }
-
-  function renderImageViewer(stage, item, imageData) {
-    var id = item && item.id;
-    var name = item && item.name ? item.name : "Dashboard";
-
-    if (!imageData) {
-      stage.innerHTML = ''
-        + '<div class="viewer-message">'
-        + '  <div class="viewer-message-card">'
-        + '    <div class="viewer-message-icon">IMG</div>'
-        + '    <h1>No Live Image</h1>'
-        + '    <p>No PNG image has been created for ' + escapeHtml(name) + ' yet. Open the dashboard and use Create Image.</p>'
-        + '    <a class="btn btn-primary" href="dashboards.html">Back to Dashboards</a>'
-        + '  </div>'
-        + '</div>';
-      return;
-    }
-
-    stage.innerHTML = ''
-      + '<img class="live-dashboard-image" src="' + escapeHtml(imageData) + '" alt="' + escapeHtml(name) + '">'
-      + '<div class="viewer-tools">'
-      + '  <a class="viewer-tool-btn" href="dashboards.html" title="Back to dashboards">Back</a>'
-      + '  <label class="viewer-tool-btn" title="Replace live image">Replace'
-      + '    <input class="dashboard-image-input" type="file" accept="image/png,image/jpeg,image/webp" data-dashboard-id="' + escapeHtml(id) + '">'
-      + '  </label>'
-      + '</div>';
-    bindImageUploads(stage);
   }
 
   function renderEmbeddedViewer(stage, item, dashboardUrl) {
@@ -270,7 +236,6 @@
     var title;
     var i;
     var dashboardUrl;
-    var mode;
 
     if (!stage) return;
 
@@ -282,14 +247,6 @@
         item = config[i];
         break;
       }
-    }
-
-    mode = trim(getQueryParam("mode")).toLowerCase();
-    if (item && mode === "image") {
-      if (title) setText(title, item.name);
-      document.title = item.name + " Live Image | Dashboard Portal";
-      renderImageViewer(stage, item, getDashboardImage(item));
-      return;
     }
 
     if (!item || !hasUrl(item)) {
@@ -311,6 +268,253 @@
 
     dashboardUrl = buildDashboardUrl(item.url);
     renderEmbeddedViewer(stage, item, dashboardUrl);
+    renderViewerTools(stage, item);
+  }
+
+  function getSlideshowSeconds() {
+    var value;
+
+    try {
+      value = Number(window.localStorage.getItem("dashboard-slideshow-seconds"));
+    } catch (error) {
+      value = 10;
+    }
+
+    if (!value || value < 3) return 10;
+    if (value > 300) return 300;
+    return value;
+  }
+
+  function setSlideshowSeconds(value) {
+    try {
+      window.localStorage.setItem("dashboard-slideshow-seconds", String(value));
+    } catch (error) {
+      return;
+    }
+  }
+
+  function fillSlideshowUploadControls() {
+    var select = document.getElementById("slideshowDashboardSelect");
+    var year = document.getElementById("slideshowYear");
+    var month = document.getElementById("slideshowMonth");
+    var input = document.getElementById("slideshowUploadInput");
+    var html = "";
+    var now = new Date();
+    var i;
+
+    if (!select || !year || !month || !input) return;
+
+    for (i = 0; i < config.length; i += 1) {
+      html += '<option value="' + escapeHtml(config[i].id) + '">' + escapeHtml(config[i].name || "Dashboard") + '</option>';
+    }
+
+    select.innerHTML = html;
+    year.value = String(now.getFullYear());
+    month.value = String(now.getMonth() + 1);
+
+    input.onchange = function () {
+      var file = input.files && input.files[0];
+      var id = select.value;
+      var period = formatReportPeriod(year.value, month.value);
+      var reader;
+
+      if (!file || !id || !period) return;
+
+      reader = new FileReader();
+      reader.onload = function () {
+        if (setStoredSlide(id, String(reader.result || ""), period)) {
+          window.location.reload();
+        } else {
+          window.alert("This screenshot is too large for browser storage. Please use a smaller PNG/JPG image.");
+        }
+      };
+      reader.readAsDataURL(file);
+    };
+  }
+
+  function collectSlides() {
+    var slides = [];
+    var i;
+
+    for (i = 0; i < config.length; i += 1) {
+      var item = config[i];
+      var image = getStoredImage(item.id);
+
+      if (!image) continue;
+
+      slides.push({
+        name: item.name || "Dashboard",
+        image: image,
+        period: getStoredPeriod(item.id)
+      });
+    }
+
+    return slides;
+  }
+
+  function loadSlideshow() {
+    var stage = document.getElementById("slideshowStage");
+    var title = document.getElementById("slideshowTitle");
+    var date = document.getElementById("slideshowDate");
+    var empty = document.getElementById("slideshowEmpty");
+    var prev = document.getElementById("prevSlide");
+    var next = document.getElementById("nextSlide");
+    var playPause = document.getElementById("playPauseSlide");
+    var fullscreen = document.getElementById("fullscreenSlide");
+    var secondsInput = document.getElementById("slideSeconds");
+    var slides;
+    var current = 0;
+    var timer = null;
+    var playing = true;
+    var activeNode;
+    var pendingNode;
+    var animating = false;
+    var controlsHideTimer = null;
+
+    if (!stage) return;
+
+    slides = collectSlides();
+    if (!slides.length) {
+      document.body.className = document.body.className.replace(/\s*no-slideshow-slides/g, "") + " no-slideshow-slides";
+      return;
+    }
+
+    document.body.className = document.body.className.replace(/\s*no-slideshow-slides/g, "");
+    if (empty) empty.style.display = "none";
+    activeNode = document.createElement("img");
+    pendingNode = document.createElement("img");
+    activeNode.className = "slideshow-image active";
+    pendingNode.className = "slideshow-image";
+    activeNode.alt = "";
+    pendingNode.alt = "";
+    stage.appendChild(activeNode);
+    stage.appendChild(pendingNode);
+
+    function updateMeta() {
+      var slide = slides[current];
+
+      setText(title, slide.name);
+      setText(date, slide.period ? "Report: " + slide.period : "Report period not set");
+    }
+
+    function drawInitial() {
+      var slide = slides[current];
+
+      activeNode.src = slide.image;
+      activeNode.title = slide.name;
+      activeNode.alt = slide.name;
+      updateMeta();
+    }
+
+    function draw(direction) {
+      var slide = slides[current];
+      var oldNode;
+
+      if (animating) return;
+
+      pendingNode.src = slide.image;
+      pendingNode.title = slide.name;
+      pendingNode.alt = slide.name;
+      pendingNode.className = direction < 0
+        ? "slideshow-image pending-left"
+        : "slideshow-image pending-right";
+      pendingNode.offsetHeight;
+
+      animating = true;
+      activeNode.className = direction < 0
+        ? "slideshow-image exit-right"
+        : "slideshow-image exit-left";
+      pendingNode.className = "slideshow-image active";
+      updateMeta();
+
+      window.setTimeout(function () {
+        oldNode = activeNode;
+        activeNode = pendingNode;
+        pendingNode = oldNode;
+        pendingNode.className = "slideshow-image";
+        animating = false;
+      }, 560);
+    }
+
+    function stopTimer() {
+      if (timer) {
+        window.clearInterval(timer);
+        timer = null;
+      }
+    }
+
+    function startTimer() {
+      stopTimer();
+      if (playing && slides.length > 1) {
+        timer = window.setInterval(function () {
+          if (animating) return;
+          current = (current + 1) % slides.length;
+          draw(1);
+        }, getSlideshowSeconds() * 1000);
+      }
+    }
+
+    function move(offset) {
+      if (animating) return;
+      current = (current + offset + slides.length) % slides.length;
+      draw(offset < 0 ? -1 : 1);
+      startTimer();
+    }
+
+    function revealControls() {
+      document.body.className = document.body.className.replace(/\s*show-slideshow-controls/g, "") + " show-slideshow-controls";
+      if (controlsHideTimer) window.clearTimeout(controlsHideTimer);
+      controlsHideTimer = window.setTimeout(function () {
+        document.body.className = document.body.className.replace(/\s*show-slideshow-controls/g, "");
+      }, 3500);
+    }
+
+    if (secondsInput) {
+      secondsInput.value = String(getSlideshowSeconds());
+      secondsInput.onchange = function () {
+        var value = Number(secondsInput.value);
+
+        if (!value || value < 3) value = 3;
+        if (value > 300) value = 300;
+        secondsInput.value = String(value);
+        setSlideshowSeconds(value);
+        startTimer();
+      };
+    }
+
+    if (prev) prev.onclick = function () { move(-1); };
+    if (next) next.onclick = function () { move(1); };
+    if (playPause) {
+      playPause.onclick = function () {
+        playing = !playing;
+        setText(playPause, playing ? "Pause" : "Play");
+        startTimer();
+      };
+    }
+    if (fullscreen) {
+      fullscreen.onclick = function () {
+        var target = document.documentElement;
+
+        if (document.fullscreenElement && document.exitFullscreen) {
+          document.exitFullscreen();
+          return;
+        }
+
+        if (target.requestFullscreen) {
+          target.requestFullscreen();
+        } else if (target.webkitRequestFullscreen) {
+          target.webkitRequestFullscreen();
+        } else if (target.msRequestFullscreen) {
+          target.msRequestFullscreen();
+        }
+      };
+    }
+    document.addEventListener("mousemove", revealControls, false);
+    document.addEventListener("touchstart", revealControls, false);
+    document.addEventListener("keydown", revealControls, false);
+
+    drawInitial();
+    startTimer();
   }
 
   function ready(callback) {
@@ -326,6 +530,8 @@
   ready(function () {
     renderDashboardCards();
     loadViewer();
+    fillSlideshowUploadControls();
+    loadSlideshow();
     window.addEventListener("resize", sizePortraitDashboardFrame, false);
     window.addEventListener("orientationchange", sizePortraitDashboardFrame, false);
   });
