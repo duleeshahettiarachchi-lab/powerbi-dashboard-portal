@@ -493,7 +493,7 @@
     }
     if (fullscreen) {
       fullscreen.onclick = function () {
-        var target = document.documentElement;
+        var target = stage;
 
         if (document.fullscreenElement && document.exitFullscreen) {
           document.exitFullscreen();
