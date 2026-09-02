@@ -500,6 +500,18 @@ body.show-slideshow-controls .slideshow-control-bar {
   color: var(--navy);
   font-weight: 900;
 }
+.slideshow-stage:fullscreen {
+  background: #050b12;
+}
+.slideshow-stage:fullscreen .slideshow-image {
+  width: 100vw;
+  height: 100vh;
+}
+body:has(.slideshow-stage:fullscreen) .slideshow-header,
+body:has(.slideshow-stage:fullscreen) .slideshow-upload-panel,
+body:has(.slideshow-stage:fullscreen) .slideshow-control-bar {
+  display: none;
+}
 @media (max-width: 1050px) {
   .dashboard-grid { grid-template-columns: repeat(3, 1fr); }
   .hero-inner { grid-template-columns: 1fr 1fr; gap: 35px; }
