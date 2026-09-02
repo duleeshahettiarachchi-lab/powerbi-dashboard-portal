@@ -4,9 +4,6 @@
   1. Open this file in Visual Studio Code.
   2. Paste each Power BI, Looker, or other dashboard URL inside the matching url: "..." field.
   3. Leave url: "" empty when a dashboard is not yet available.
-  4. Optional: add image: "images/file-name.png" to any dashboard to show
-     a hosted full-screen Live Image on TVs that cannot open the dashboard.
-
   URL notes:
   - Power BI "Publish to web" URLs can normally open directly.
   - Google Looker and other secure dashboard URLs may require each viewer to sign in.
