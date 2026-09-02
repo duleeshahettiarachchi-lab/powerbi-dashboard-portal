@@ -211,7 +211,7 @@ main { flex: 1; }
 .status-badge.unavailable::before { background: var(--danger); }
 .dashboard-card h3 { margin: 18px 0 9px; color: var(--navy); font-size: 1.06rem; line-height: 1.35; }
 .dashboard-card p { margin: 0; color: var(--muted); font-size: .9rem; line-height: 1.55; }
-.card-action { margin-top: auto; padding-top: 20px; }
+.card-action { margin-top: auto; padding-top: 20px; display: grid; gap: 9px; }
 .open-dashboard { width: 100%; min-height: 42px; border-radius: 10px; border: 0; font-weight: 900; cursor: pointer; }
 .open-dashboard.enabled { background: var(--powerbi-yellow); color: var(--navy); }
 .open-dashboard.enabled:hover { background: #ffda35; }
@@ -234,13 +234,6 @@ main { flex: 1; }
 .image-upload:hover { background: #e2ebf5; }
 .live-image-link { background: var(--navy); color: #fff; }
 .live-image-link:hover { background: var(--blue); }
-.dashboard-image-input {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  opacity: 0;
-  pointer-events: none;
-}
 .empty-state { display: none; text-align: center; background:#fff; border:1px dashed #bfcbd7; border-radius:16px; padding:42px 20px; color:var(--muted); }
 
 .site-footer { background: #0b1d31; color: #aebfd0; border-top: 4px solid var(--powerbi-yellow); }
@@ -257,13 +250,6 @@ main { flex: 1; }
 .viewer-actions { display:flex; flex-wrap:wrap; justify-content:center; gap:10px; }
 .viewer-secondary-action { background:#eef4fb; color:var(--navy); border:1px solid #d3deea; box-shadow:none; }
 .viewer-secondary-action:hover { background:#e2ebf5; }
-.live-dashboard-image {
-  display: block;
-  width: 100vw;
-  height: 100vh;
-  object-fit: contain;
-  background: #ffffff;
-}
 .dashboard-frame-wrap {
   width: 100vw;
   height: 100vh;
@@ -329,6 +315,191 @@ main { flex: 1; }
   font-weight: 900;
   cursor: pointer;
 }
+.slideshow-page,
+.slideshow-shell,
+.slideshow-main {
+  min-height: 100vh;
+  background: #050b12;
+}
+.slideshow-header {
+  position: fixed;
+  right: 0;
+  left: 0;
+  opacity: 0;
+  transition: opacity .2s ease;
+}
+.slideshow-header:hover,
+.slideshow-header:focus-within,
+body.show-slideshow-controls .slideshow-header {
+  opacity: 1;
+}
+.slideshow-main {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+}
+.slideshow-stage {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  background: #050b12;
+}
+.slideshow-image {
+  display: block;
+  position: absolute;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  border: 0;
+  object-fit: contain;
+  background: #050b12;
+  transform: translateX(100%);
+  transition: transform .55s ease;
+  will-change: transform;
+}
+.slideshow-image.active {
+  transform: translateX(0);
+  z-index: 2;
+}
+.slideshow-image.pending-right {
+  transform: translateX(100%);
+  z-index: 3;
+}
+.slideshow-image.pending-left {
+  transform: translateX(-100%);
+  z-index: 3;
+}
+.slideshow-image.exit-left {
+  transform: translateX(-100%);
+  z-index: 2;
+}
+.slideshow-image.exit-right {
+  transform: translateX(100%);
+  z-index: 2;
+}
+.slideshow-empty {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  place-items: center;
+  padding: 30px;
+  background: var(--surface-2);
+}
+.slideshow-upload-panel {
+  position: fixed;
+  top: 88px;
+  right: 16px;
+  left: 16px;
+  z-index: 20;
+  display: grid;
+  grid-template-columns: minmax(180px, 1.5fr) 100px minmax(120px, .8fr) auto;
+  align-items: end;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,.18);
+  background: rgba(5,11,18,.78);
+  color: #fff;
+  opacity: 0;
+  transition: opacity .2s ease;
+}
+.slideshow-upload-panel:focus-within,
+body.no-slideshow-slides .slideshow-upload-panel,
+body.show-slideshow-controls .slideshow-upload-panel {
+  opacity: 1;
+}
+.slideshow-upload-panel label span {
+  display: block;
+  margin-bottom: 4px;
+  color: #c9d6e4;
+  font-size: .72rem;
+  font-weight: 900;
+}
+.slideshow-upload-panel select,
+.slideshow-upload-panel input[type="number"] {
+  width: 100%;
+  height: 34px;
+  border: 0;
+  border-radius: 7px;
+  padding: 0 8px;
+  color: var(--navy);
+  font-weight: 900;
+}
+.slideshow-upload-btn {
+  min-width: 160px;
+}
+.slideshow-upload-btn input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+.slideshow-control-bar {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  left: 16px;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,.18);
+  background: rgba(5,11,18,.78);
+  color: #fff;
+  opacity: 0;
+  transition: opacity .2s ease;
+}
+.slideshow-control-bar:focus-within,
+body.show-slideshow-controls .slideshow-control-bar {
+  opacity: 1;
+}
+.slideshow-meta {
+  min-width: 0;
+}
+.slideshow-meta strong,
+.slideshow-meta span {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.slideshow-meta strong { font-size: .92rem; }
+.slideshow-meta span {
+  margin-top: 2px;
+  color: #c9d6e4;
+  font-size: .76rem;
+  font-weight: 800;
+}
+.slideshow-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.slideshow-timing {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 36px;
+  padding: 0 8px;
+  border-radius: 8px;
+  background: rgba(255,255,255,.08);
+  color: #fff;
+  font-size: .76rem;
+  font-weight: 900;
+}
+.slideshow-timing input {
+  width: 62px;
+  height: 28px;
+  border: 0;
+  border-radius: 6px;
+  padding: 0 6px;
+  color: var(--navy);
+  font-weight: 900;
+}
 @media (max-width: 1050px) {
   .dashboard-grid { grid-template-columns: repeat(3, 1fr); }
   .hero-inner { grid-template-columns: 1fr 1fr; gap: 35px; }
@@ -354,6 +525,24 @@ main { flex: 1; }
   .hero-panel { display:none; }
   .dashboard-toolbar { align-items:stretch; flex-direction:column; }
   .dashboard-grid { grid-template-columns: 1fr; }
+  .slideshow-control-bar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+  .slideshow-controls {
+    flex-wrap: wrap;
+  }
+  .slideshow-controls .viewer-tool-btn {
+    flex: 1 1 auto;
+  }
+  .slideshow-upload-panel {
+    top: 76px;
+    grid-template-columns: 1fr 1fr;
+  }
+  .slideshow-upload-panel label:first-child,
+  .slideshow-upload-btn {
+    grid-column: 1 / -1;
+  }
 }
 /* Power BI Information Section */
 
