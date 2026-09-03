@@ -13,7 +13,7 @@ snapshot.html              Smart TV snapshot viewer
 snapshot-config.json       Snapshot capture, image and refresh settings
 scripts/capture-snapshots.js
                            Playwright snapshot capture script
-.github/workflows/snapshot-previews.yml
+.github/workflows/update-snapshots.yml
                            Daily/manual GitHub Actions automation
 snapshots/metadata.json    Generated snapshot status and timestamps
 
@@ -52,11 +52,33 @@ HOW TO MANUALLY RUN SNAPSHOT AUTOMATION
 5. Leave dashboard_id empty to capture every dashboard, or enter one dashboard
    ID to test a single dashboard.
 
+MANUAL GENERATE SNAPSHOT OPTION
+-------------------------------
+Use this when you want to refresh snapshots immediately instead of waiting for
+the daily schedule.
+
+In GitHub:
+Actions
+-> Update Smart TV Snapshot Previews
+-> Run workflow
+-> enter dashboard ID 1, or leave blank for all dashboards
+-> Run workflow
+
+For local testing with Node.js installed:
+
+npm install
+npx playwright install chromium
+npm run generate:snapshot -- 1
+
+To manually generate every configured public dashboard locally:
+
+npm run generate:snapshots
+
 HOW TO CHANGE THE DAILY SCHEDULE
 --------------------------------
 Edit the cron value in:
 
-.github/workflows/snapshot-previews.yml
+.github/workflows/update-snapshots.yml
 
 The current schedule is:
 
