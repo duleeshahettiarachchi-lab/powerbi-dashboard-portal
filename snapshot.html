@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="Smart TV dashboard snapshot viewer.">
+  <title>Snapshot View | Dashboard Portal</title>
+  <link rel="stylesheet" href="css/styles.css?v=20260903-1">
+</head>
+<body class="snapshot-page">
+  <main class="snapshot-stage" id="snapshotStage">
+    <div class="snapshot-message" id="snapshotMessage">Loading snapshot...</div>
+  </main>
+
+  <div class="snapshot-meta">
+    <strong id="snapshotTitle">Snapshot View</strong>
+    <span id="snapshotUpdated">Last updated: checking...</span>
+  </div>
+
+  <div class="viewer-tools">
+    <a class="viewer-tool-btn" href="dashboards.html" title="Back to dashboards">Back</a>
+    <a class="viewer-tool-btn" id="snapshotLiveLink" href="viewer.html" title="Open live dashboard">Live</a>
+  </div>
+
+  <script src="js/dashboard-config.js?v=20260901-9"></script>
+  <script src="js/app.js?v=20260903-1"></script>
+</body>
+</html>
