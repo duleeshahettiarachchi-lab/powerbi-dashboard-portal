@@ -1,11 +1,18 @@
 {
-  "generatedAt": "2026-09-03T06:07:21.220Z",
+  "generatedAt": "2026-09-03T06:15:52.853Z",
   "dashboards": [
     {
       "id": 1,
       "name": "Pasting Machine Dashboard",
       "snapshotPath": "snapshots/1-pasting-machine-dashboard.jpg",
       "capturedAt": "2026-09-03T06:07:21.183Z",
+      "status": "ok"
+    },
+    {
+      "id": 2,
+      "name": "Casting Machine Dashboard",
+      "snapshotPath": "snapshots/2-casting-machine-dashboard.jpg",
+      "capturedAt": "2026-09-03T06:15:52.799Z",
       "status": "ok"
     }
   ]
