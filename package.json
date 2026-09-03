@@ -5,7 +5,9 @@
   "description": "Static Power BI dashboard portal with automated Smart TV snapshots.",
   "scripts": {
     "capture:snapshots": "node scripts/capture-snapshots.js",
-    "capture:snapshots:one": "node scripts/capture-snapshots.js --id"
+    "capture:snapshots:one": "node scripts/capture-snapshots.js --id",
+    "generate:snapshots": "node scripts/capture-snapshots.js",
+    "generate:snapshot": "node scripts/capture-snapshots.js --id"
   },
   "devDependencies": {
     "playwright": "^1.46.0"
