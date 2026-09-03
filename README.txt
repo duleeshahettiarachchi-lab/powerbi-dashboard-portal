@@ -87,8 +87,27 @@ The current schedule is:
 
 15 18 * * *
 
-GitHub Actions cron times are UTC. The same value is also recorded in
-snapshot-config.json as documentation beside the other snapshot settings.
+GitHub Actions cron times are UTC. For Sri Lanka time, subtract 5 hours and
+30 minutes when choosing the UTC cron time.
+
+Examples:
+- 11:45 PM Sri Lanka time = 18:15 UTC = 15 18 * * *
+- 06:00 AM Sri Lanka time = 00:30 UTC = 30 0 * * *
+- 08:00 AM Sri Lanka time = 02:30 UTC = 30 2 * * *
+
+After changing the workflow cron, update schedule.githubActionsCron in
+snapshot-config.json to keep the documentation config in sync.
+
+SLIDESHOW FROM AUTOMATED SNAPSHOTS
+----------------------------------
+The Slideshow page now uses captured images from snapshots/metadata.json first.
+After the GitHub Action captures dashboard images, open:
+
+slideshow.html
+
+The slideshow will show all successful snapshots selected in the dashboard
+selector. Browser-uploaded screenshots remain available only as a fallback when
+no automated snapshot exists for a dashboard.
 
 HOW TO TEST ONE DASHBOARD LOCALLY
 ---------------------------------
