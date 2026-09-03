@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-03T06:15:52.853Z",
+  "generatedAt": "2026-09-03T06:31:57.810Z",
   "dashboards": [
     {
       "id": 1,
@@ -13,6 +13,13 @@
       "name": "Casting Machine Dashboard",
       "snapshotPath": "snapshots/2-casting-machine-dashboard.jpg",
       "capturedAt": "2026-09-03T06:15:52.799Z",
+      "status": "ok"
+    },
+    {
+      "id": 3,
+      "name": "Assembly Line 01 Dashboard",
+      "snapshotPath": "snapshots/3-assembly-line-01-dashboard.jpg",
+      "capturedAt": "2026-09-03T06:31:57.769Z",
       "status": "ok"
     }
   ]
