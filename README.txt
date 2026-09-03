@@ -57,6 +57,9 @@ MANUAL GENERATE SNAPSHOT OPTION
 Use this when you want to refresh snapshots immediately instead of waiting for
 the daily schedule.
 
+On the Dashboards page, use the Generate Snapshots button. It opens the GitHub
+Actions workflow page in a new tab. GitHub will ask you to sign in if needed.
+
 In GitHub:
 Actions
 -> Update Smart TV Snapshot Previews
