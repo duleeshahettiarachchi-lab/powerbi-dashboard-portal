@@ -1,4 +1,12 @@
 {
-  "generatedAt": null,
-  "dashboards": []
+  "generatedAt": "2026-09-03T06:07:21.220Z",
+  "dashboards": [
+    {
+      "id": 1,
+      "name": "Pasting Machine Dashboard",
+      "snapshotPath": "snapshots/1-pasting-machine-dashboard.jpg",
+      "capturedAt": "2026-09-03T06:07:21.183Z",
+      "status": "ok"
+    }
+  ]
 }
