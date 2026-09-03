@@ -9,6 +9,85 @@ viewer.html                Dashboard launch page and image viewer
 css/styles.css             Website colours, layout and responsive design
 js/dashboard-config.js     Dashboard names, descriptions and dashboard URLs
 js/app.js                  Dashboard cards, search and launch behaviour
+snapshot.html              Smart TV snapshot viewer
+snapshot-config.json       Snapshot capture, image and refresh settings
+scripts/capture-snapshots.js
+                           Playwright snapshot capture script
+.github/workflows/snapshot-previews.yml
+                           Daily/manual GitHub Actions automation
+snapshots/metadata.json    Generated snapshot status and timestamps
+
+AUTOMATED SMART TV SNAPSHOTS
+----------------------------
+The portal can generate lightweight dashboard preview images for Smart TVs.
+GitHub Actions runs Playwright in Chromium, reads the existing dashboard list
+from js/dashboard-config.js, opens each dashboard that has a public URL, waits
+for Power BI to render, and saves one fixed image per dashboard in:
+
+snapshots/
+
+The workflow also updates:
+
+snapshots/metadata.json
+
+This metadata contains each dashboard ID, name, snapshot path, capture time,
+status, and any capture error. The website reads this file to show "Last
+updated" beside the TV Preview button. Snapshot URLs include the capture
+timestamp as a cache-busting query string so Smart TVs do not keep an old image
+after a new capture is published.
+
+The snapshot viewer is:
+
+snapshot.html?id=1
+
+It displays the latest image full-screen on a dark background and reloads
+periodically using the interval in snapshot-config.json.
+
+HOW TO MANUALLY RUN SNAPSHOT AUTOMATION
+---------------------------------------
+1. Open the GitHub repository.
+2. Go to Actions.
+3. Select "Update Smart TV Snapshot Previews".
+4. Choose "Run workflow".
+5. Leave dashboard_id empty to capture every dashboard, or enter one dashboard
+   ID to test a single dashboard.
+
+HOW TO CHANGE THE DAILY SCHEDULE
+--------------------------------
+Edit the cron value in:
+
+.github/workflows/snapshot-previews.yml
+
+The current schedule is:
+
+15 18 * * *
+
+GitHub Actions cron times are UTC. The same value is also recorded in
+snapshot-config.json as documentation beside the other snapshot settings.
+
+HOW TO TEST ONE DASHBOARD LOCALLY
+---------------------------------
+Install Node.js, then run:
+
+npm install
+npx playwright install chromium
+npm run capture:snapshots:one -- 1
+
+Replace 1 with the dashboard ID you want to test. The script preserves metadata
+for other dashboards when testing one dashboard.
+
+TROUBLESHOOTING FAILED POWER BI CAPTURES
+----------------------------------------
+- Confirm the URL in js/dashboard-config.js opens without Microsoft login in a
+  private/incognito browser window.
+- Confirm the URL is a Power BI "Publish to web" or other public no-login URL.
+- Increase capture.finalRenderDelayMs in snapshot-config.json if visuals load
+  slowly.
+- Increase capture.navigationTimeoutMs or capture.visualWaitTimeoutMs for very
+  slow reports.
+- Open the failed GitHub Actions run and check the capture log. The script logs
+  each failed dashboard ID, name and error.
+- If a dashboard fails, the workflow continues with the remaining dashboards.
 
 LIVE IMAGE OPTION
 -----------------
