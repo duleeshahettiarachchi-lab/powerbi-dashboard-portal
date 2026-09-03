@@ -4,7 +4,7 @@ on:
   schedule:
     # Daily schedule. Change this cron when the snapshot time needs to move.
     # Runs at 14:05 Sri Lanka time, which is 08:35 UTC.
-    - cron: "35 8 * * *"
+    - cron: "39 8 * * *"
   workflow_dispatch:
     inputs:
       dashboard_id:
