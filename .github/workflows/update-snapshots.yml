@@ -3,10 +3,8 @@ name: Update Smart TV Snapshot Previews
 on:
   schedule:
     # Daily schedule. Change this cron when the snapshot time needs to move.
-    # Runs at 14:20 Sri Lanka time, which is 08:50 UTC.
-    - cron: "50 8 * * *"
-    # Temporary test schedule: runs every 5 minutes. Remove after schedule testing.
-    - cron: "*/5 * * * *"
+    # Temporary test schedule: runs at 15:05 Sri Lanka time, which is 09:35 UTC.
+    - cron: "35 9 * * *"
   workflow_dispatch:
     inputs:
       dashboard_id:
