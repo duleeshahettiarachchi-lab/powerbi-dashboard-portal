@@ -1,0 +1,23 @@
+{
+  "viewport": {
+    "width": 1920,
+    "height": 1080
+  },
+  "image": {
+    "format": "jpg",
+    "quality": 82
+  },
+  "capture": {
+    "navigationTimeoutMs": 90000,
+    "visualWaitTimeoutMs": 90000,
+    "finalRenderDelayMs": 15000
+  },
+  "schedule": {
+    "githubActionsCron": "15 18 * * *"
+  },
+  "snapshot": {
+    "outputDir": "snapshots",
+    "metadataPath": "snapshots/metadata.json",
+    "refreshIntervalMs": 3600000
+  }
+}
