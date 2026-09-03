@@ -85,12 +85,13 @@ Edit the cron value in:
 
 The current schedule is:
 
-15 18 * * *
+30 7 * * *
 
 GitHub Actions cron times are UTC. For Sri Lanka time, subtract 5 hours and
 30 minutes when choosing the UTC cron time.
 
 Examples:
+- 01:00 PM Sri Lanka time = 07:30 UTC = 30 7 * * *
 - 11:45 PM Sri Lanka time = 18:15 UTC = 15 18 * * *
 - 06:00 AM Sri Lanka time = 00:30 UTC = 30 0 * * *
 - 08:00 AM Sri Lanka time = 02:30 UTC = 30 2 * * *
