@@ -178,6 +178,13 @@ main { flex: 1; }
   display: flex; align-items: center; justify-content: space-between; gap: 18px;
   margin-bottom: 24px;
 }
+.dashboard-toolbar-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
+}
 .search-box { position: relative; width: min(430px, 100%); }
 .search-box input {
   width: 100%; height: 48px; border: 1px solid var(--line); border-radius: 12px;
@@ -186,6 +193,20 @@ main { flex: 1; }
 .search-box input:focus { border-color: var(--powerbi-yellow-dark); box-shadow: 0 0 0 4px rgba(242,200,17,.18); }
 .search-icon { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #718096; }
 .count-pill { background: #fff; border: 1px solid var(--line); border-radius: 999px; padding: 10px 14px; color: var(--navy); font-weight: 800; white-space: nowrap; }
+.snapshot-generate-link {
+  min-height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 14px;
+  border-radius: 10px;
+  background: var(--navy);
+  color: #fff;
+  font-size: .84rem;
+  font-weight: 900;
+  white-space: nowrap;
+}
+.snapshot-generate-link:hover { background: var(--blue); }
 
 .dashboard-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
 .dashboard-card {
@@ -681,6 +702,7 @@ body.slideshow-fullscreen .slideshow-floating-controls {
   .hero h1 { font-size:2.5rem; }
   .hero-panel { display:none; }
   .dashboard-toolbar { align-items:stretch; flex-direction:column; }
+  .dashboard-toolbar-actions { justify-content: space-between; }
   .dashboard-grid { grid-template-columns: 1fr; }
   .slideshow-floating-meta {
     right: 14px;
