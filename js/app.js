@@ -272,6 +272,21 @@
     return path + (path.indexOf("?") === -1 ? "?" : "&") + "t=" + encodeURIComponent(snapshot.capturedAt || new Date().getTime());
   }
 
+  function requestFullscreen(target) {
+    if (document.fullscreenElement && document.exitFullscreen) {
+      document.exitFullscreen();
+      return;
+    }
+
+    if (target.requestFullscreen) {
+      target.requestFullscreen();
+    } else if (target.webkitRequestFullscreen) {
+      target.webkitRequestFullscreen();
+    } else if (target.msRequestFullscreen) {
+      target.msRequestFullscreen();
+    }
+  }
+
   function getSnapshotStatusHtml(item, metadata) {
     var snapshot = findSnapshotById(item.id, metadata);
     var updated = snapshot && snapshot.status === "ok" ? formatDateTime(snapshot.capturedAt) : "";
@@ -450,6 +465,7 @@
     var title = document.getElementById("snapshotTitle");
     var updated = document.getElementById("snapshotUpdated");
     var liveLink = document.getElementById("snapshotLiveLink");
+    var fullscreen = document.getElementById("snapshotFullscreen");
     var id;
     var item;
 
@@ -497,6 +513,12 @@
         }
       });
     });
+
+    if (fullscreen) {
+      fullscreen.onclick = function () {
+        requestFullscreen(stage);
+      };
+    }
   }
 
   function getSlideshowSeconds() {
@@ -689,14 +711,23 @@
     updateSelectionCount();
   }
 
-  function collectSlides() {
+  function collectSlides(metadata) {
     var slides = [];
     var selected = getSelectedSlideIds();
     var i;
 
     for (i = 0; i < config.length; i += 1) {
       var item = config[i];
-      var image = getStoredImage(item.id);
+      var snapshot = findSnapshotById(item.id, metadata);
+      var image = buildSnapshotUrl(snapshot);
+      var period = snapshot && snapshot.status === "ok"
+        ? "Last updated: " + (formatDateTime(snapshot.capturedAt) || "unknown")
+        : "";
+
+      if (!image) {
+        image = getStoredImage(item.id);
+        period = getStoredPeriod(item.id);
+      }
 
       if (!image) continue;
       if (selected && !selected[String(item.id)]) continue;
@@ -705,7 +736,7 @@
         id: item.id,
         name: item.name || "Dashboard",
         image: image,
-        period: getStoredPeriod(item.id)
+        period: period
       });
     }
 
@@ -743,7 +774,7 @@
       }
 
       setText(title, slide.name);
-      setText(date, slide.period ? "Report: " + slide.period : "Report period not set");
+      setText(date, slide.period || "Snapshot time not set");
     }
 
     function drawInitial() {
@@ -839,7 +870,7 @@
       var i;
 
       stopTimer();
-      slides = collectSlides();
+      slides = collectSlides(snapshotMetadata);
 
       if (!slides.length) {
         document.body.className = document.body.className.replace(/\s*no-slideshow-slides/g, "") + " no-slideshow-slides";
@@ -892,20 +923,7 @@
     }
     if (fullscreen) {
       fullscreen.onclick = function () {
-        var target = stage;
-
-        if (document.fullscreenElement && document.exitFullscreen) {
-          document.exitFullscreen();
-          return;
-        }
-
-        if (target.requestFullscreen) {
-          target.requestFullscreen();
-        } else if (target.webkitRequestFullscreen) {
-          target.webkitRequestFullscreen();
-        } else if (target.msRequestFullscreen) {
-          target.msRequestFullscreen();
-        }
+        requestFullscreen(stage);
       };
     }
     document.addEventListener("fullscreenchange", updateFullscreenState, false);
@@ -913,7 +931,7 @@
     document.addEventListener("MSFullscreenChange", updateFullscreenState, false);
 
     fillSlideshowSelectionControls(refreshSlides);
-    refreshSlides();
+    loadSnapshotMetadata(refreshSlides);
   }
 
   function ready(callback) {
