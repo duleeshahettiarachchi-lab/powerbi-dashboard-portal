@@ -2,6 +2,8 @@
   var config = Object.prototype.toString.call(window.DASHBOARD_CONFIG) === "[object Array]"
     ? window.DASHBOARD_CONFIG
     : [];
+  var snapshotMetadata = null;
+  var snapshotSettings = null;
 
   function hasUrl(item) {
     return Boolean(item && typeof item.url === "string" && item.url.replace(/^\s+|\s+$/g, ""));
@@ -168,6 +170,123 @@
     }
   }
 
+  function loadJson(url, callback) {
+    var request;
+
+    if (!window.XMLHttpRequest) {
+      callback(null);
+      return;
+    }
+
+    request = new XMLHttpRequest();
+    request.open("GET", url, true);
+    request.onreadystatechange = function () {
+      if (request.readyState !== 4) return;
+
+      if ((request.status >= 200 && request.status < 300) || (request.status === 0 && request.responseText)) {
+        try {
+          callback(JSON.parse(request.responseText));
+        } catch (error) {
+          callback(null);
+        }
+      } else {
+        callback(null);
+      }
+    };
+    request.send(null);
+  }
+
+  function loadSnapshotMetadata(callback) {
+    if (snapshotMetadata) {
+      callback(snapshotMetadata);
+      return;
+    }
+
+    loadJson("snapshots/metadata.json?v=" + encodeURIComponent(String(new Date().getTime())), function (data) {
+      snapshotMetadata = data && Object.prototype.toString.call(data.dashboards) === "[object Array]"
+        ? data
+        : { dashboards: [] };
+      callback(snapshotMetadata);
+    });
+  }
+
+  function loadSnapshotSettings(callback) {
+    if (snapshotSettings) {
+      callback(snapshotSettings);
+      return;
+    }
+
+    loadJson("snapshot-config.json?v=" + encodeURIComponent(String(new Date().getTime())), function (data) {
+      snapshotSettings = data || {};
+      callback(snapshotSettings);
+    });
+  }
+
+  function findDashboardById(id) {
+    var i;
+
+    for (i = 0; i < config.length; i += 1) {
+      if (String(config[i].id) === String(id)) {
+        return config[i];
+      }
+    }
+
+    return null;
+  }
+
+  function findSnapshotById(id, metadata) {
+    var list = metadata && Object.prototype.toString.call(metadata.dashboards) === "[object Array]"
+      ? metadata.dashboards
+      : [];
+    var i;
+
+    for (i = 0; i < list.length; i += 1) {
+      if (String(list[i].id) === String(id)) {
+        return list[i];
+      }
+    }
+
+    return null;
+  }
+
+  function formatDateTime(value) {
+    var date;
+
+    if (!value) return "";
+
+    date = new Date(value);
+    if (isNaN(date.getTime())) return "";
+
+    try {
+      return date.toLocaleString();
+    } catch (error) {
+      return value;
+    }
+  }
+
+  function buildSnapshotUrl(snapshot) {
+    var path = snapshot && snapshot.snapshotPath ? String(snapshot.snapshotPath) : "";
+
+    if (!path || snapshot.status !== "ok") return "";
+
+    return path + (path.indexOf("?") === -1 ? "?" : "&") + "t=" + encodeURIComponent(snapshot.capturedAt || new Date().getTime());
+  }
+
+  function getSnapshotStatusHtml(item, metadata) {
+    var snapshot = findSnapshotById(item.id, metadata);
+    var updated = snapshot && snapshot.status === "ok" ? formatDateTime(snapshot.capturedAt) : "";
+
+    if (updated) {
+      return '<div class="snapshot-card-meta">Last updated: ' + escapeHtml(updated) + '</div>';
+    }
+
+    if (snapshot && snapshot.status === "failed") {
+      return '<div class="snapshot-card-meta unavailable">Snapshot capture failed</div>';
+    }
+
+    return '<div class="snapshot-card-meta unavailable">Snapshot not available yet</div>';
+  }
+
   function renderDashboardCards() {
     var grid = document.getElementById("dashboardGrid");
     var search;
@@ -217,6 +336,8 @@
           +        (available
             ? '<a class="open-dashboard enabled btn" href="viewer.html?id=' + encodeURIComponent(item.id) + '&v=20260901-9">Open Dashboard &rarr;</a>'
             : '')
+          + '      <a class="snapshot-dashboard btn" href="snapshot.html?id=' + encodeURIComponent(item.id) + '">TV Preview</a>'
+          +        getSnapshotStatusHtml(item, snapshotMetadata)
           + '    </div>'
           + '  </div>'
           + '</article>';
@@ -233,6 +354,10 @@
       search.onsearch = function () { draw(search.value); };
       search.onchange = function () { draw(search.value); };
     }
+
+    loadSnapshotMetadata(function () {
+      draw(search ? search.value : "");
+    });
   }
 
   function renderViewerTools(stage, item) {
@@ -317,6 +442,61 @@
     dashboardUrl = buildDashboardUrl(item.url);
     renderEmbeddedViewer(stage, item, dashboardUrl);
     renderViewerTools(stage, item);
+  }
+
+  function loadSnapshotViewer() {
+    var stage = document.getElementById("snapshotStage");
+    var message = document.getElementById("snapshotMessage");
+    var title = document.getElementById("snapshotTitle");
+    var updated = document.getElementById("snapshotUpdated");
+    var liveLink = document.getElementById("snapshotLiveLink");
+    var id;
+    var item;
+
+    if (!stage) return;
+
+    id = Number(getQueryParam("id"));
+    item = findDashboardById(id);
+
+    if (item) {
+      document.title = item.name + " Snapshot | Dashboard Portal";
+      setText(title, item.name);
+      if (liveLink) liveLink.href = "viewer.html?id=" + encodeURIComponent(item.id);
+    }
+
+    loadSnapshotSettings(function (settings) {
+      loadSnapshotMetadata(function (metadata) {
+        var snapshot = findSnapshotById(id, metadata);
+        var imageUrl = buildSnapshotUrl(snapshot);
+        var refreshInterval = settings
+          && settings.snapshot
+          && Number(settings.snapshot.refreshIntervalMs)
+          ? Number(settings.snapshot.refreshIntervalMs)
+          : 3600000;
+
+        if (!item) {
+          setText(title, "Snapshot View");
+          setText(updated, "Dashboard not found");
+          setText(message, "Dashboard not found");
+          return;
+        }
+
+        if (!imageUrl) {
+          setText(updated, "Last updated: not available");
+          setText(message, "Snapshot not available yet");
+          return;
+        }
+
+        stage.innerHTML = '<img class="snapshot-image" src="' + escapeHtml(imageUrl) + '" alt="' + escapeHtml(item.name || "Dashboard snapshot") + '">';
+        setText(updated, "Last updated: " + (formatDateTime(snapshot.capturedAt) || "unknown"));
+
+        if (refreshInterval >= 60000) {
+          window.setTimeout(function () {
+            window.location.reload();
+          }, refreshInterval);
+        }
+      });
+    });
   }
 
   function getSlideshowSeconds() {
@@ -749,6 +929,7 @@
   ready(function () {
     renderDashboardCards();
     loadViewer();
+    loadSnapshotViewer();
     fillSlideshowUploadControls();
     loadSlideshow();
     window.addEventListener("resize", sizePortraitDashboardFrame, false);
