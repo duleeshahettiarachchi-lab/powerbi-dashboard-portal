@@ -13,7 +13,7 @@
     "finalRenderDelayMs": 15000
   },
   "schedule": {
-    "githubActionsCron": "37 15 * * *"
+    "githubActionsCron": "33 16 * * *"
   },
   "snapshot": {
     "outputDir": "snapshots",
