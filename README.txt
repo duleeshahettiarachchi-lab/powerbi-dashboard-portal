@@ -11,7 +11,7 @@ js/dashboard-config.js     Dashboard names, descriptions and dashboard URLs
 js/app.js                  Dashboard cards, search and launch behaviour
 snapshot.html              Smart TV snapshot viewer
 snapshot-config.json       Snapshot capture, image and refresh settings
-scripts/capture-snapshots.js
+scripts/capture-snapshot.js
                            Playwright snapshot capture script
 .github/workflows/update-snapshots.yml
                            Daily/manual GitHub Actions automation
