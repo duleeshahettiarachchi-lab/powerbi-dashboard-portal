@@ -1,6 +1,15 @@
-"scripts": {
-  "capture:snapshots": "node scripts/capture-snapshot.js",
-  "capture:snapshots:one": "node scripts/capture-snapshot.js --id",
-  "generate:snapshots": "node scripts/capture-snapshot.js",
-  "generate:snapshot": "node scripts/capture-snapshot.js --id"
+{
+  "name": "powerbi-dashboard-portal",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Static Power BI dashboard portal with automated Smart TV snapshots.",
+  "scripts": {
+    "capture:snapshots": "node scripts/capture-snapshot.js",
+    "capture:snapshots:one": "node scripts/capture-snapshot.js --id",
+    "generate:snapshots": "node scripts/capture-snapshot.js",
+    "generate:snapshot": "node scripts/capture-snapshot.js --id"
+  },
+  "devDependencies": {
+    "playwright": "^1.46.0"
+  }
 }
