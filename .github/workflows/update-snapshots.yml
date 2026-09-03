@@ -2,7 +2,7 @@ name: Update Smart TV Snapshot Previews
 
 on:
   schedule:
-    - cron: "30 7 * * *"
+    - cron: "45 7 * * *"
   workflow_dispatch:
     inputs:
       dashboard_id:
