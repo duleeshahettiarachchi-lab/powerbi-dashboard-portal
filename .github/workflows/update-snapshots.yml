@@ -3,8 +3,8 @@ name: Update Smart TV Snapshot Previews
 on:
   schedule:
     # Daily schedule. Change this cron when the snapshot time needs to move.
-    # Runs at 09:07 Sri Lanka time, which is 03:37 UTC.
-    - cron: "37 3 * * *"
+    # Runs at 21:07 Sri Lanka time, which is 15:37 UTC.
+    - cron: "37 15 * * *"
   workflow_dispatch:
     inputs:
       dashboard_id:
