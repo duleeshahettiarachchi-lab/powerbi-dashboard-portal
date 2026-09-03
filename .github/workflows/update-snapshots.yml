@@ -5,6 +5,8 @@ on:
     # Daily schedule. Change this cron when the snapshot time needs to move.
     # Runs at 14:20 Sri Lanka time, which is 08:50 UTC.
     - cron: "50 8 * * *"
+    # Temporary test schedule: runs every 5 minutes. Remove after schedule testing.
+    - cron: "*/5 * * * *"
   workflow_dispatch:
     inputs:
       dashboard_id:
@@ -37,6 +39,12 @@ jobs:
 
       - name: Install Playwright Chromium
         run: npx playwright install --with-deps chromium
+
+      - name: Show workflow time
+        run: |
+          echo "Workflow event: ${{ github.event_name }}"
+          echo "UTC time: $(date -u)"
+          TZ=Asia/Colombo date "+Sri Lanka time: %Y-%m-%d %H:%M:%S %Z"
 
       - name: Capture all dashboard snapshots
         if: ${{ github.event_name != 'workflow_dispatch' || inputs.dashboard_id == '' }}
