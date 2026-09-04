@@ -598,25 +598,31 @@ body.no-slideshow-slides .slideshow-selector-panel {
   gap: 8px;
 }
 .slideshow-timing {
+  position: relative;
+  overflow: hidden;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 7px;
   min-height: 36px;
-  padding: 0 8px;
+  padding: 0 10px;
   border-radius: 8px;
-  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(255,255,255,.28);
+  background: rgba(15,39,66,.86);
   color: #fff;
-  font-size: .76rem;
+  font-size: .78rem;
   font-weight: 900;
 }
 .slideshow-timing input {
-  width: 62px;
+  width: 44px;
   height: 28px;
-  border: 0;
+  border: 1px solid rgba(255,255,255,.26);
   border-radius: 6px;
-  padding: 0 6px;
+  padding: 0 4px;
+  background: rgba(255,255,255,.95);
   color: var(--navy);
   font-weight: 900;
+  text-align: center;
 }
 .slideshow-stage:fullscreen {
   background: #050b12;
