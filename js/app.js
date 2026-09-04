@@ -88,16 +88,6 @@
     }
   }
 
-  function setStoredSlide(id, image, period) {
-    try {
-      window.localStorage.setItem(getImageKey(id), image);
-      window.localStorage.setItem(getPeriodKey(id), period);
-      return true;
-    } catch (error) {
-      return false;
-    }
-  }
-
   function getSelectedSlideIds() {
     var raw;
     var parsed;
@@ -144,23 +134,6 @@
     } catch (error) {
       return;
     }
-  }
-
-  function getMonthName(monthNumber) {
-    var names = [
-      "January", "February", "March", "April", "May", "June",
-      "July", "August", "September", "October", "November", "December"
-    ];
-
-    return names[Math.max(0, Math.min(11, Number(monthNumber) - 1))];
-  }
-
-  function formatReportPeriod(year, month) {
-    year = Number(year);
-    month = Number(month);
-
-    if (!year || !month) return "";
-    return getMonthName(month) + "-" + String(year);
   }
 
   function setText(node, value) {
@@ -543,45 +516,6 @@
     }
   }
 
-  function fillSlideshowUploadControls() {
-    var select = document.getElementById("slideshowDashboardSelect");
-    var year = document.getElementById("slideshowYear");
-    var month = document.getElementById("slideshowMonth");
-    var input = document.getElementById("slideshowUploadInput");
-    var html = "";
-    var now = new Date();
-    var i;
-
-    if (!select || !year || !month || !input) return;
-
-    for (i = 0; i < config.length; i += 1) {
-      html += '<option value="' + escapeHtml(config[i].id) + '">' + escapeHtml(config[i].name || "Dashboard") + '</option>';
-    }
-
-    select.innerHTML = html;
-    year.value = String(now.getFullYear());
-    month.value = String(now.getMonth() + 1);
-
-    input.onchange = function () {
-      var file = input.files && input.files[0];
-      var id = select.value;
-      var period = formatReportPeriod(year.value, month.value);
-      var reader;
-
-      if (!file || !id || !period) return;
-
-      reader = new FileReader();
-      reader.onload = function () {
-        if (setStoredSlide(id, String(reader.result || ""), period)) {
-          window.location.reload();
-        } else {
-          window.alert("This screenshot is too large for browser storage. Please use a smaller PNG/JPG image.");
-        }
-      };
-      reader.readAsDataURL(file);
-    };
-  }
-
   function fillSlideshowSelectionControls(onSelectionChange) {
     var panel = document.getElementById("slideshowSelectorPanel");
     var menuButton = document.getElementById("slideshowMenuButton");
@@ -948,7 +882,6 @@
     renderDashboardCards();
     loadViewer();
     loadSnapshotViewer();
-    fillSlideshowUploadControls();
     loadSlideshow();
     window.addEventListener("resize", sizePortraitDashboardFrame, false);
     window.addEventListener("orientationchange", sizePortraitDashboardFrame, false);
