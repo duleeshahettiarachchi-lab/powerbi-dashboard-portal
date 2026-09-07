@@ -169,8 +169,8 @@
     request.send(null);
   }
 
-  function loadSnapshotMetadata(callback) {
-    if (snapshotMetadata) {
+  function loadSnapshotMetadata(callback, forceRefresh) {
+    if (snapshotMetadata && !forceRefresh) {
       callback(snapshotMetadata);
       return;
     }
@@ -437,10 +437,11 @@
     var message = document.getElementById("snapshotMessage");
     var title = document.getElementById("snapshotTitle");
     var updated = document.getElementById("snapshotUpdated");
-    var liveLink = document.getElementById("snapshotLiveLink");
-    var fullscreen = document.getElementById("snapshotFullscreen");
     var id;
     var item;
+    var currentSnapshotUrl = "";
+    var currentImage = null;
+    var wakeLock = null;
 
     if (!stage) return;
 
@@ -450,48 +451,101 @@
     if (item) {
       document.title = item.name + " Snapshot | Dashboard Portal";
       setText(title, item.name);
-      if (liveLink) liveLink.href = "viewer.html?id=" + encodeURIComponent(item.id);
     }
 
-    loadSnapshotSettings(function (settings) {
+    function showSnapshotUnavailable(text) {
+      if (!currentImage) {
+        stage.innerHTML = '<div class="snapshot-message" id="snapshotMessage">' + escapeHtml(text) + '</div>';
+        message = document.getElementById("snapshotMessage");
+      }
+    }
+
+    function replaceSnapshotImage(imageUrl, altText) {
+      var nextImage = new Image();
+
+      nextImage.onload = function () {
+        nextImage.className = "snapshot-image";
+        nextImage.alt = altText;
+        stage.innerHTML = "";
+        stage.appendChild(nextImage);
+        currentImage = nextImage;
+        currentSnapshotUrl = imageUrl;
+      };
+
+      nextImage.onerror = function () {
+        showSnapshotUnavailable("Snapshot not available yet");
+      };
+
+      nextImage.src = imageUrl;
+    }
+
+    function refreshSnapshot() {
       loadSnapshotMetadata(function (metadata) {
         var snapshot = findSnapshotById(id, metadata);
         var imageUrl = buildSnapshotUrl(snapshot);
-        var refreshInterval = settings
-          && settings.snapshot
-          && Number(settings.snapshot.refreshIntervalMs)
-          ? Number(settings.snapshot.refreshIntervalMs)
-          : 3600000;
 
         if (!item) {
           setText(title, "Snapshot View");
           setText(updated, "Dashboard not found");
-          setText(message, "Dashboard not found");
+          showSnapshotUnavailable("Dashboard not found");
           return;
         }
 
         if (!imageUrl) {
           setText(updated, "Last updated: not available");
-          setText(message, "Snapshot not available yet");
+          showSnapshotUnavailable("Snapshot not available yet");
           return;
         }
 
-        stage.innerHTML = '<img class="snapshot-image" src="' + escapeHtml(imageUrl) + '" alt="' + escapeHtml(item.name || "Dashboard snapshot") + '">';
         setText(updated, "Last updated: " + (formatDateTime(snapshot.capturedAt) || "unknown"));
 
-        if (refreshInterval >= 60000) {
-          window.setTimeout(function () {
-            window.location.reload();
-          }, refreshInterval);
+        if (imageUrl !== currentSnapshotUrl) {
+          replaceSnapshotImage(imageUrl, item.name || "Dashboard snapshot");
         }
+      }, true);
+    }
+
+    function requestScreenWakeLock() {
+      if (!navigator.wakeLock || !navigator.wakeLock.request) return;
+
+      navigator.wakeLock.request("screen").then(function (lock) {
+        wakeLock = lock;
+      }).catch(function () {
+        wakeLock = null;
       });
+    }
+
+    loadSnapshotSettings(function (settings) {
+      var refreshInterval = settings
+        && settings.snapshot
+        && Number(settings.snapshot.refreshIntervalMs)
+        ? Number(settings.snapshot.refreshIntervalMs)
+        : 1800000;
+      var pageReloadInterval = settings
+        && settings.snapshot
+        && Number(settings.snapshot.pageReloadIntervalMs)
+        ? Number(settings.snapshot.pageReloadIntervalMs)
+        : 21600000;
+
+      refreshSnapshot();
+
+      if (refreshInterval >= 60000) {
+        window.setInterval(refreshSnapshot, refreshInterval);
+      }
+
+      if (pageReloadInterval >= 3600000) {
+        window.setTimeout(function () {
+          window.location.reload();
+        }, pageReloadInterval);
+      }
     });
 
-    if (fullscreen) {
-      fullscreen.onclick = function () {
-        requestFullscreen(stage);
-      };
-    }
+    requestScreenWakeLock();
+    document.addEventListener("visibilitychange", function () {
+      if (document.visibilityState === "visible" && !wakeLock) {
+        requestScreenWakeLock();
+      }
+    }, false);
   }
 
   function getSlideshowSeconds() {

@@ -18,6 +18,7 @@
   "snapshot": {
     "outputDir": "snapshots",
     "metadataPath": "snapshots/metadata.json",
-    "refreshIntervalMs": 3600000
+    "refreshIntervalMs": 1800000,
+    "pageReloadIntervalMs": 21600000
   }
 }

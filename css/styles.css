@@ -354,10 +354,17 @@ main { flex: 1; }
   font-weight: 900;
   cursor: pointer;
 }
-.snapshot-page,
-.snapshot-stage {
-  width: 100%;
-  height: 100%;
+.snapshot-page {
+  width: 100vw;
+  height: 100vh;
+  min-height: 100vh;
+  margin: 0;
+  overflow: hidden;
+  background: #05070a;
+}
+.snapshot-page .snapshot-stage {
+  width: 100vw;
+  height: 100vh;
   min-height: 100vh;
   margin: 0;
   overflow: hidden;
