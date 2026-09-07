@@ -437,6 +437,8 @@
     var message = document.getElementById("snapshotMessage");
     var title = document.getElementById("snapshotTitle");
     var updated = document.getElementById("snapshotUpdated");
+    var reload = document.getElementById("snapshotReload");
+    var fullscreen = document.getElementById("snapshotFullscreen");
     var id;
     var item;
     var currentSnapshotUrl = "";
@@ -539,6 +541,16 @@
         }, pageReloadInterval);
       }
     });
+
+    if (reload) {
+      reload.onclick = refreshSnapshot;
+    }
+
+    if (fullscreen) {
+      fullscreen.onclick = function () {
+        requestFullscreen(stage);
+      };
+    }
 
     requestScreenWakeLock();
     document.addEventListener("visibilitychange", function () {
