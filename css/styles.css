@@ -276,9 +276,19 @@ main { flex: 1; }
 .footer-inner-credit-only { justify-content: center; }
 .footer-inner strong { color: #fff; }
 .footer-credit { color: #e7edf4; }
-.footer-credit a { color: #fff; font-weight: 900; }
+.footer-credit a {
+  color: #fff;
+  font-weight: 900;
+  text-decoration: underline;
+  text-decoration-color: var(--powerbi-yellow);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
 .footer-credit a:hover,
-.footer-credit a:focus { color: var(--powerbi-yellow); }
+.footer-credit a:focus {
+  color: var(--powerbi-yellow);
+  text-decoration-color: #fff;
+}
 
 .viewer-message { height:100%; display:grid; place-items:center; padding:30px; background:var(--surface-2); }
 .viewer-message-card { max-width:560px; padding:34px; text-align:center; border-radius:20px; border:1px solid var(--line); background:#fff; box-shadow:var(--shadow); }
