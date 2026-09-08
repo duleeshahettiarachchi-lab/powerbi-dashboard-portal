@@ -368,14 +368,14 @@ main { flex: 1; }
   position: relative;
 }
 .password-field input {
-  padding-right: 46px;
+  padding-right: 38px;
 }
 .password-toggle {
   position: absolute;
-  right: 9px;
+  right: 8px;
   top: 50%;
-  width: 26px;
-  height: 26px;
+  width: 20px;
+  height: 20px;
   transform: translateY(-50%);
   border: 0;
   border-radius: 0;
@@ -395,21 +395,21 @@ main { flex: 1; }
 }
 .password-toggle-icon {
   position: relative;
-  width: 22px;
-  height: 14px;
+  width: 17px;
+  height: 11px;
   display: block;
-  border-top: 3px solid currentColor;
-  border-radius: 22px 22px 0 0;
+  border-top: 2px solid currentColor;
+  border-radius: 17px 17px 0 0;
 }
 .password-toggle-icon::after {
   content: "";
   position: absolute;
   left: 50%;
-  top: 2px;
-  width: 9px;
-  height: 9px;
+  top: 1px;
+  width: 7px;
+  height: 7px;
   transform: translateX(-50%);
-  border: 3px solid currentColor;
+  border: 2px solid currentColor;
   border-radius: 50%;
   background: #ffffff;
 }
