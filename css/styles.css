@@ -983,12 +983,20 @@ body.slideshow-fullscreen .slideshow-floating-controls {
   .slideshow-menu-button {
     top: 12px;
     left: 12px;
+    z-index: 45;
   }
   .slideshow-selector-panel {
     top: 58px;
     left: 12px;
+    bottom: 12px;
+    z-index: 40;
     width: calc(100vw - 24px);
-    max-height: calc(100vh - 76px);
+    max-height: none;
+    background: #050b12;
+  }
+  .slideshow-selector-panel.open ~ .slideshow-floating-meta,
+  .slideshow-selector-panel.open ~ .slideshow-floating-controls {
+    display: none;
   }
   .slideshow-floating-meta {
     position: relative;
