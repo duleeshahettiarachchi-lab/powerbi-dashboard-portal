@@ -304,31 +304,38 @@ main { flex: 1; }
   justify-content: center;
   gap: 10px;
 }
-.footer-credit-logo a {
+.footer-credit-logo .footer-logo-link {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
   padding: 4px 6px;
   background: #ffffff;
   text-decoration: none;
-  color: #111111;
 }
-.footer-credit-logo a:hover,
-.footer-credit-logo a:focus {
+.footer-credit-logo .footer-logo-link:hover,
+.footer-credit-logo .footer-logo-link:focus {
   background: #ffffff;
   box-shadow: 0 0 0 2px var(--powerbi-yellow);
-  color: var(--powerbi-yellow);
 }
 .footer-credit-logo img {
   display: block;
   width: 82px;
   height: auto;
 }
-.footer-credit-logo strong {
-  color: inherit;
+.footer-name-link {
+  color: #ffffff;
   font-size: .86rem;
+  font-weight: 900;
   line-height: 1.2;
+  text-decoration: underline;
+  text-decoration-color: var(--powerbi-yellow);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
   white-space: nowrap;
+}
+.footer-name-link:hover,
+.footer-name-link:focus {
+  color: var(--powerbi-yellow);
+  text-decoration-color: #ffffff;
 }
 
 .auth-page {
