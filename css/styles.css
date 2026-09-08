@@ -535,13 +535,20 @@ main { flex: 1; }
   justify-content: center;
   min-height: 36px;
   padding: 0 12px;
-  border-radius: 8px;
-  border: 1px solid rgba(255,255,255,.28);
-  background: rgba(15,39,66,.86);
+  border-radius: 0;
+  border: 1px solid #111111;
+  background: #111111;
   color: #fff;
   font-size: .78rem;
   font-weight: 900;
   cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0,0,0,.22);
+}
+.viewer-tool-btn:hover,
+.viewer-tool-btn:focus {
+  border-color: var(--powerbi-yellow);
+  background: var(--powerbi-yellow);
+  color: #ffffff;
 }
 .snapshot-page {
   width: 100vw;
