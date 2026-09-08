@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">ABM logo</title>
+  <desc id="desc">ABM logo with red rounded square, white lightning shape, and blue ABM letters.</desc>
+  <rect width="512" height="512" rx="52" fill="#ed1c24"/>
+  <path d="M305 42 60 342h170l-34 128 256-306H284z" fill="#fff"/>
+  <g fill="#07136f">
+    <path d="M84 326 168 190h44v136h-34v-28h-58l-17 28zm52-62h42v-68z"/>
+    <path d="M222 190h68c34 0 55 17 55 45 0 16-8 29-22 37 18 7 29 22 29 43 0 32-25 51-63 51h-67zm63 66c15 0 24-7 24-20 0-12-9-19-24-19h-27v39zm4 83c17 0 27-8 27-23 0-14-10-22-27-22h-31v45z"/>
+    <path d="M358 190h41l40 65 40-65h41v176h-38V252l-43 67h-2l-42-66v113h-37z"/>
+  </g>
+  <path d="M86 326h126v-33H107z" fill="#fff"/>
+</svg>
