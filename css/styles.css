@@ -204,21 +204,6 @@ main { flex: 1; }
 .search-box input:focus { border-color: var(--powerbi-yellow-dark); box-shadow: 0 0 0 4px rgba(237,28,36,.14); }
 .search-icon { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #718096; }
 .count-pill { background: #fff; border: 1px solid var(--line); border-radius: 0; padding: 10px 14px; color: var(--navy); font-weight: 800; white-space: nowrap; }
-.snapshot-generate-link {
-  min-height: 42px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 14px;
-  border-radius: 0;
-  background: var(--navy);
-  color: #fff;
-  font-size: .84rem;
-  font-weight: 900;
-  white-space: nowrap;
-}
-.snapshot-generate-link:hover { background: var(--powerbi-yellow); }
-
 .dashboard-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
 .dashboard-card {
   min-height: 260px;
