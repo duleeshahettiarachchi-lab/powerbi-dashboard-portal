@@ -305,24 +305,19 @@ main { flex: 1; }
   gap: 14px;
   flex-wrap: wrap;
 }
-.footer-text-link {
-  color: #e7edf4;
-  text-decoration: none;
-}
-.footer-text-link strong {
+.footer-name-link {
   color: #ffffff;
+  font-size: .86rem;
   font-weight: 900;
+  line-height: 1.2;
   text-decoration: underline;
   text-decoration-color: var(--powerbi-yellow);
   text-decoration-thickness: 2px;
   text-underline-offset: 3px;
+  white-space: nowrap;
 }
-.footer-text-link:hover,
-.footer-text-link:focus {
-  color: #e7edf4;
-}
-.footer-text-link:hover strong,
-.footer-text-link:focus strong {
+.footer-name-link:hover,
+.footer-name-link:focus {
   color: var(--powerbi-yellow);
   text-decoration-color: #ffffff;
 }
