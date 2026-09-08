@@ -114,7 +114,7 @@
       togglePassword.onclick = function () {
         var isVisible = password.type === "text";
         password.type = isVisible ? "password" : "text";
-        togglePassword.textContent = isVisible ? "Show" : "Hide";
+        togglePassword.setAttribute("aria-label", isVisible ? "Show password" : "Hide password");
         togglePassword.setAttribute("aria-pressed", isVisible ? "false" : "true");
         password.focus();
       };

@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Dashboard portal access screen.">
   <title>Access | Dashboard Portal</title>
-  <link rel="stylesheet" href="css/styles.css?v=20260908-9">
+  <link rel="stylesheet" href="css/styles.css?v=20260908-10">
   <script src="js/auth-config.js?v=20260908-3"></script>
-  <script src="js/auth.js?v=20260908-4"></script>
+  <script src="js/auth.js?v=20260908-5"></script>
 </head>
 <body class="auth-page">
   <main class="auth-shell">
@@ -24,7 +24,9 @@
         <label for="authPassword">Password</label>
         <div class="password-field">
           <input id="authPassword" type="password" autocomplete="current-password" autofocus required>
-          <button id="togglePassword" class="password-toggle" type="button" aria-pressed="false">Show</button>
+          <button id="togglePassword" class="password-toggle" type="button" aria-label="Show password" aria-pressed="false">
+            <span class="password-toggle-icon" aria-hidden="true"></span>
+          </button>
         </div>
         <button class="btn btn-primary" type="submit">Open Portal</button>
         <div class="auth-error" id="authError" aria-live="polite"></div>
