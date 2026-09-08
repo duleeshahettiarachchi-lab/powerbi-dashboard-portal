@@ -298,6 +298,29 @@ main { flex: 1; }
   color: var(--powerbi-yellow);
   text-decoration-color: #fff;
 }
+.footer-credit-logo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+.footer-credit-logo a {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 6px;
+  background: #ffffff;
+  text-decoration: none;
+}
+.footer-credit-logo a:hover,
+.footer-credit-logo a:focus {
+  background: #ffffff;
+  box-shadow: 0 0 0 2px var(--powerbi-yellow);
+}
+.footer-credit-logo img {
+  display: block;
+  width: 132px;
+  height: auto;
+}
 
 .auth-page {
   min-height: 100vh;
