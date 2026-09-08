@@ -101,6 +101,7 @@
   function initLoginPage() {
     var form = document.getElementById("authForm");
     var password = document.getElementById("authPassword");
+    var togglePassword = document.getElementById("togglePassword");
 
     if (isAuthenticated()) {
       window.location.replace(getLoginReturnUrl());
@@ -108,6 +109,16 @@
     }
 
     if (!form || !password) return;
+
+    if (togglePassword) {
+      togglePassword.onclick = function () {
+        var isVisible = password.type === "text";
+        password.type = isVisible ? "password" : "text";
+        togglePassword.textContent = isVisible ? "Show" : "Hide";
+        togglePassword.setAttribute("aria-pressed", isVisible ? "false" : "true");
+        password.focus();
+      };
+    }
 
     form.onsubmit = function (event) {
       event.preventDefault();

@@ -364,6 +364,32 @@ main { flex: 1; }
   border-color: var(--powerbi-yellow);
   box-shadow: 0 0 0 4px rgba(237,28,36,.12);
 }
+.password-field {
+  position: relative;
+}
+.password-field input {
+  padding-right: 72px;
+}
+.password-toggle {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  min-width: 52px;
+  height: 30px;
+  transform: translateY(-50%);
+  border: 0;
+  border-radius: 0;
+  background: #111111;
+  color: #ffffff;
+  font-size: .75rem;
+  font-weight: 900;
+  cursor: pointer;
+}
+.password-toggle:hover,
+.password-toggle:focus {
+  background: var(--powerbi-yellow);
+  outline: none;
+}
 .auth-error {
   min-height: 18px;
   color: var(--powerbi-yellow-dark);
