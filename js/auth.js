@@ -110,13 +110,36 @@
 
     if (!form || !password) return;
 
+    function setPasswordVisible(isVisible) {
+      password.type = isVisible ? "text" : "password";
+      togglePassword.setAttribute("aria-label", isVisible ? "Hide password" : "Show password");
+      togglePassword.setAttribute("aria-pressed", isVisible ? "true" : "false");
+    }
+
     if (togglePassword) {
-      togglePassword.onclick = function () {
-        var isVisible = password.type === "text";
-        password.type = isVisible ? "password" : "text";
-        togglePassword.setAttribute("aria-label", isVisible ? "Show password" : "Hide password");
-        togglePassword.setAttribute("aria-pressed", isVisible ? "false" : "true");
-        password.focus();
+      togglePassword.onmouseenter = function () {
+        setPasswordVisible(true);
+      };
+      togglePassword.onmouseleave = function () {
+        setPasswordVisible(false);
+      };
+      togglePassword.onfocus = function () {
+        setPasswordVisible(true);
+      };
+      togglePassword.onblur = function () {
+        setPasswordVisible(false);
+      };
+      togglePassword.onpointerdown = function (event) {
+        if (event.pointerType !== "mouse") setPasswordVisible(true);
+      };
+      togglePassword.onpointerup = function (event) {
+        if (event.pointerType !== "mouse") setPasswordVisible(false);
+      };
+      togglePassword.onpointercancel = function () {
+        setPasswordVisible(false);
+      };
+      togglePassword.onclick = function (event) {
+        event.preventDefault();
       };
     }
 
