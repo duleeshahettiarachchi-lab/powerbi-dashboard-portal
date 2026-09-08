@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Dashboard portal access screen.">
+  <title>Access | Dashboard Portal</title>
+  <link rel="stylesheet" href="css/styles.css?v=20260908-8">
+  <script src="js/auth-config.js?v=20260908-2"></script>
+  <script src="js/auth.js?v=20260908-2"></script>
+</head>
+<body class="auth-page">
+  <main class="auth-shell">
+    <section class="auth-card">
+      <div class="auth-brand">
+        <img src="assets/ABM_logo_exact.png?v=20260908-1" alt="ABM">
+        <div>
+          <strong>Associated Battery</strong>
+          <span>BI Dashboards</span>
+        </div>
+      </div>
+
+      <form id="authForm" class="auth-form">
+        <label for="authPassword">Shared password</label>
+        <input id="authPassword" type="password" autocomplete="current-password" autofocus required>
+        <button class="btn btn-primary" type="submit">Open Portal</button>
+        <div class="auth-error" id="authError" aria-live="polite"></div>
+      </form>
+    </section>
+  </main>
+</body>
+</html>

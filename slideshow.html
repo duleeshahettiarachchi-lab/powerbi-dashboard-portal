@@ -5,7 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="description" content="Dashboard screenshot slideshow.">
   <title>Slideshow | Dashboard Portal</title>
-  <link rel="stylesheet" href="css/styles.css?v=20260908-6">
+  <link rel="stylesheet" href="css/styles.css?v=20260908-8">
+  <script src="js/auth-config.js?v=20260908-2"></script>
+  <script src="js/auth.js?v=20260908-2"></script>
 </head>
 <body class="slideshow-page">
   <div class="site-shell slideshow-shell">
@@ -48,6 +50,7 @@
         <button class="viewer-tool-btn" type="button" id="playPauseSlide" title="Pause or play slideshow">Pause</button>
         <button class="viewer-tool-btn" type="button" id="nextSlide" title="Next slide">Next</button>
         <button class="viewer-tool-btn" type="button" id="fullscreenSlide" title="Full screen slideshow">Full Screen</button>
+        <button class="viewer-tool-btn" type="button" data-auth-logout title="Logout">Logout</button>
         <label class="slideshow-timing">
           <span>Seconds</span>
           <input id="slideSeconds" type="number" min="3" max="300" step="1" value="10" aria-label="Slideshow time in seconds">
@@ -57,6 +60,6 @@
   </div>
 
   <script src="js/dashboard-config.js?v=20260901-9"></script>
-  <script src="js/app.js?v=20260904-1"></script>
+  <script src="js/app.js?v=20260908-3"></script>
 </body>
 </html>

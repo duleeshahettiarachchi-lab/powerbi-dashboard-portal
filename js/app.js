@@ -355,6 +355,7 @@
       + '<div class="viewer-tools">'
       + '  <a class="viewer-tool-btn" href="dashboards.html" title="Back to dashboards">Back</a>'
       + '  <a class="viewer-tool-btn" href="slideshow.html" title="Open slideshow">Slideshow</a>'
+      + '  <button class="viewer-tool-btn" type="button" data-auth-logout title="Logout">Logout</button>'
       + '</div>');
   }
 
