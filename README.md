@@ -19,6 +19,8 @@ Copy the generated hash into `js/auth-config.js`:
 passwordHash: "paste-new-sha256-hash-here"
 ```
 
-Smart TVs stay logged in for 30 days by default. Change `sessionDurationDays` in `js/auth-config.js` if you need a different duration.
+By default, login is saved only for the current browser/tab session. After the browser or tab is closed, the next visit asks for the password again. This is controlled by `storageType: "session"` in `js/auth-config.js`.
 
-To logout or reset a TV session, use the `Logout` button on the dashboard, TV Preview, slideshow, or live viewer page. You can also clear the browser site data/localStorage for the GitHub Pages site.
+To keep a Smart TV logged in for a longer time, change `storageType` to `"local"` and set `sessionDurationDays`, for example `30`.
+
+To logout or reset a TV session, use the `Logout` button on the dashboard, TV Preview, slideshow, or live viewer page. You can also clear the browser site data for the GitHub Pages site.

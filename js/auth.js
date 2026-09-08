@@ -5,6 +5,10 @@
   var storageKey = config.storageKey || "powerbi-dashboard-portal-auth";
   var loginPage = "login.html";
 
+  function getStorage() {
+    return config.storageType === "local" ? window.localStorage : window.sessionStorage;
+  }
+
   function isLoginPage() {
     return /(^|\/)login\.html$/i.test(window.location.pathname);
   }
@@ -16,7 +20,7 @@
 
   function getStoredSession() {
     try {
-      return JSON.parse(window.localStorage.getItem(storageKey) || "null");
+      return JSON.parse(getStorage().getItem(storageKey) || "null");
     } catch (error) {
       return null;
     }
@@ -25,18 +29,20 @@
   function clearSession() {
     try {
       window.localStorage.removeItem(storageKey);
-    } catch (error) {
-      return;
-    }
+    } catch (error) {}
+
+    try {
+      window.sessionStorage.removeItem(storageKey);
+    } catch (error) {}
   }
 
   function isAuthenticated() {
     var session = getStoredSession();
     var now = new Date().getTime();
 
-    if (!session || !session.expiresAt || !session.passwordHash) return false;
+    if (!session || !session.passwordHash) return false;
     if (session.passwordHash !== config.passwordHash) return false;
-    if (Number(session.expiresAt) <= now) {
+    if (session.expiresAt && Number(session.expiresAt) <= now) {
       clearSession();
       return false;
     }
@@ -67,10 +73,10 @@
   }
 
   function setSession() {
-    var durationDays = Number(config.sessionDurationDays) || 30;
-    var expiresAt = new Date().getTime() + durationDays * 24 * 60 * 60 * 1000;
+    var durationDays = Number(config.sessionDurationDays) || 0;
+    var expiresAt = durationDays > 0 ? new Date().getTime() + durationDays * 24 * 60 * 60 * 1000 : null;
 
-    window.localStorage.setItem(storageKey, JSON.stringify({
+    getStorage().setItem(storageKey, JSON.stringify({
       passwordHash: config.passwordHash,
       expiresAt: expiresAt
     }));
