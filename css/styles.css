@@ -273,6 +273,7 @@ main { flex: 1; }
 
 .site-footer { background: #111111; color: #c4c8cf; border-top: 4px solid var(--powerbi-yellow); }
 .footer-inner { width: min(1220px, calc(100% - 36px)); min-height: 76px; margin: 0 auto; display:flex; align-items:center; justify-content:space-between; gap:20px; font-size:.86rem; }
+.footer-inner-credit-only { justify-content: center; }
 .footer-inner strong { color: #fff; }
 .footer-credit { color: #e7edf4; }
 .footer-credit span { color: #fff; font-weight: 900; }
