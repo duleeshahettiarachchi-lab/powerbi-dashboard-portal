@@ -307,19 +307,28 @@ main { flex: 1; }
 .footer-credit-logo a {
   display: inline-flex;
   align-items: center;
+  gap: 8px;
   padding: 4px 6px;
   background: #ffffff;
   text-decoration: none;
+  color: #111111;
 }
 .footer-credit-logo a:hover,
 .footer-credit-logo a:focus {
   background: #ffffff;
   box-shadow: 0 0 0 2px var(--powerbi-yellow);
+  color: var(--powerbi-yellow);
 }
 .footer-credit-logo img {
   display: block;
-  width: 132px;
+  width: 82px;
   height: auto;
+}
+.footer-credit-logo strong {
+  color: inherit;
+  font-size: .86rem;
+  line-height: 1.2;
+  white-space: nowrap;
 }
 
 .auth-page {
