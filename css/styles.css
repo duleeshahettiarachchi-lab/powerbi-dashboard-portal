@@ -276,7 +276,9 @@ main { flex: 1; }
 .footer-inner-credit-only { justify-content: center; }
 .footer-inner strong { color: #fff; }
 .footer-credit { color: #e7edf4; }
-.footer-credit span { color: #fff; font-weight: 900; }
+.footer-credit a { color: #fff; font-weight: 900; }
+.footer-credit a:hover,
+.footer-credit a:focus { color: var(--powerbi-yellow); }
 
 .viewer-message { height:100%; display:grid; place-items:center; padding:30px; background:var(--surface-2); }
 .viewer-message-card { max-width:560px; padding:34px; text-align:center; border-radius:20px; border:1px solid var(--line); background:#fff; box-shadow:var(--shadow); }
