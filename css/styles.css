@@ -393,10 +393,28 @@ main { flex: 1; }
   object-fit: contain;
   background: #05070a;
 }
+.snapshot-page .viewer-tools {
+  opacity: .18;
+}
+.snapshot-page .viewer-tool-btn {
+  border: 1px solid #111111;
+  border-radius: 0;
+  background: #111111;
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(0,0,0,.22);
+}
+.snapshot-page .viewer-tool-btn:hover,
+.snapshot-page .viewer-tool-btn:focus {
+  border-color: var(--powerbi-yellow);
+  background: var(--powerbi-yellow);
+  color: #ffffff;
+}
 .snapshot-message {
   max-width: min(620px, calc(100vw - 40px));
   padding: 24px;
-  color: #dbe6f1;
+  border-top: 4px solid var(--powerbi-yellow);
+  background: rgba(17,17,17,.86);
+  color: #ffffff;
   text-align: center;
   font-size: 1.15rem;
   font-weight: 900;
@@ -408,9 +426,11 @@ main { flex: 1; }
   z-index: 12;
   max-width: min(680px, calc(100vw - 28px));
   padding: 8px 10px;
-  border-radius: 8px;
-  background: rgba(5, 7, 10, .68);
+  border: 1px solid rgba(255,255,255,.14);
+  border-radius: 0;
+  background: rgba(17,17,17,.84);
   color: #fff;
+  box-shadow: 0 4px 14px rgba(0,0,0,.22);
 }
 .snapshot-meta strong,
 .snapshot-meta span {
@@ -419,10 +439,10 @@ main { flex: 1; }
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.snapshot-meta strong { font-size: .82rem; }
+.snapshot-meta strong { color: #ffffff; font-size: .82rem; }
 .snapshot-meta span {
   margin-top: 2px;
-  color: #c9d6e4;
+  color: #dbe6f1;
   font-size: .72rem;
   font-weight: 800;
 }
