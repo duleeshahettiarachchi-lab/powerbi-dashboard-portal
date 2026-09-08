@@ -581,7 +581,7 @@ main { flex: 1; }
   background: #05070a;
 }
 .snapshot-page .viewer-tools {
-  opacity: .18;
+  opacity: 1;
 }
 .snapshot-page .viewer-tool-btn {
   border: 1px solid #111111;
