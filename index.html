@@ -7,7 +7,8 @@
   <title>Dashboards | Dashboard Portal</title>
   <link rel="stylesheet" href="css/styles.css?v=20260908-26">
   <script src="js/auth-config.js?v=20260908-3"></script>
-  <script src="js/auth.js?v=20260908-3"></script>
+  <script src="js/auth.js?v=20260909-roles"></script>
+  <link rel="stylesheet" href="css/admin.css?v=2">
 </head>
 <body>
   <div class="site-shell">
@@ -21,6 +22,7 @@
           </div>
         </a>
         <nav class="site-nav" aria-label="Main navigation">
+          <span id="adminMode" class="count-pill" hidden>Admin editing enabled</span>
           <a class="active" href="index.html">Dashboards</a>
           <a href="slideshow.html">Slideshow</a>
           <button class="logout-button" type="button" data-auth-logout>Logout</button>
@@ -35,7 +37,7 @@
         </div>
       </section>
 
-      <section class="section">
+      <section class="section" id="viewerDashboards">
         <div class="dashboard-toolbar">
           <label class="search-box">
             <span class="search-icon">&#8981;</span>
@@ -49,6 +51,21 @@
         <div class="dashboard-grid" id="dashboardGrid"></div>
         <div class="empty-state" id="emptyState">No dashboard matches your search.</div>
       </section>
+    <section id="adminWorkspace" class="admin-shell" hidden>
+      <div class="admin-heading"><p>Changes are saved for all viewers. Use the arrows to change display order.</p></div>
+      <section class="admin-panel">
+        <p id="adminMessage" role="status" aria-live="polite"></p><h2 id="editorTitle">Add dashboard</h2>
+        <form id="dashboardForm">
+          <label for="dashboardName">Dashboard name</label><input id="dashboardName" maxlength="120" required>
+          <label for="dashboardDescription">Description</label><textarea id="dashboardDescription" maxlength="1000" rows="3"></textarea>
+          <label for="dashboardIcon">Short label</label><input id="dashboardIcon" maxlength="8" value="BI">
+          <label for="dashboardUrl">Power BI dashboard link</label><input id="dashboardUrl" type="url" placeholder="https://app.powerbi.com/…" maxlength="4096"><p>Paste an HTTPS dashboard or embed link. Secure Power BI reports may require viewer sign-in.</p>
+          <label for="dashboardStatus">Visibility</label><select id="dashboardStatus"><option value="draft">Draft</option><option value="published">Published</option><option value="hidden">Hidden</option></select>
+          <div class="admin-actions"><button class="btn btn-primary" type="submit">Save dashboard</button><button id="cancelEdit" class="btn" type="button">Clear / cancel</button></div>
+        </form>
+      </section>
+      <h2>Dashboards <span id="adminCount"></span></h2><div id="adminList" class="dashboard-grid"></div>
+    </section>
     </main>
 
     <footer class="site-footer">
@@ -66,5 +83,6 @@
 
   <script src="js/dashboard-config.js?v=20260901-9"></script>
   <script src="js/app.js?v=20260908-4"></script>
+  <script src="js/admin.js?v=2"></script>
 </body>
 </html>

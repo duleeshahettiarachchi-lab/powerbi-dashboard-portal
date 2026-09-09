@@ -27,6 +27,12 @@ function readExistingMetadata(config) {
 }
 
 function loadDashboardConfig() {
+  const savedPath = path.join(process.env.DATA_DIR || path.join(ROOT, "data"), "dashboards.json");
+  if (fs.existsSync(savedPath)) {
+    const saved = readJson(savedPath);
+    if (!Array.isArray(saved)) throw new Error("Saved dashboard data must be an array.");
+    return saved.filter((item) => item.status === "published");
+  }
   const source = fs.readFileSync(DASHBOARD_CONFIG_PATH, "utf8");
   const sandbox = { window: {} };
 

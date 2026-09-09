@@ -417,7 +417,7 @@
         + '  <div class="viewer-message-card">'
         + '    <div class="viewer-message-icon">BI</div>'
         + '    <h1>Dashboard Not Available</h1>'
-        + '    <p>No dashboard URL has been added for this dashboard. Add the URL in <strong>js/dashboard-config.js</strong> and open it again.</p>'
+        + '    <p>This dashboard is not currently available. Please contact your administrator.</p>'
         + '    <a class="btn btn-primary" href="dashboards.html">Back to Dashboards</a>'
         + '  </div>'
         + '</div>';

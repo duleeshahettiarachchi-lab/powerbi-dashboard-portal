@@ -8,7 +8,9 @@
     "capture:snapshots:one": "node scripts/capture-snapshot.js --id",
     "generate:snapshots": "node scripts/capture-snapshot.js",
     "generate:snapshot": "node scripts/capture-snapshot.js --id",
-    "auth:hash": "node scripts/generate-password-hash.js"
+    "auth:hash": "node scripts/generate-password-hash.js",
+    "start": "node server.js",
+    "test:admin": "node scripts/test-admin.js"
   },
   "devDependencies": {
     "playwright": "^1.46.0"

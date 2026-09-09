@@ -1,0 +1,13 @@
+.admin-shell { max-width: 1000px; margin: auto; padding: 32px 20px; }
+.admin-heading, .admin-actions { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.admin-panel, .admin-row { background: white; border: 1px solid #dbe2eb; border-radius: 14px; padding: 24px; margin: 18px 0; }
+.admin-shell form { display: grid; gap: 12px; }
+.admin-shell input, .admin-shell textarea, .admin-shell select { width: 100%; padding: 12px; border: 1px solid #aab8c8; border-radius: 8px; font: inherit; }
+.admin-shell button { cursor: pointer; }
+.admin-shell button:disabled { opacity: .45; cursor: default; }
+.admin-row h3 { margin: 0 0 8px; overflow-wrap: anywhere; }
+.admin-row p { overflow-wrap: anywhere; }
+.admin-actions { justify-content: flex-start; margin-top: 12px; }
+.admin-actions button { padding: 8px 14px; border-radius: 6px; border: 1px solid #bdc9d7; background: #f3f6fa; }
+#adminMessage { color: #a42525; min-height: 24px; }
+[hidden] { display: none !important; }
