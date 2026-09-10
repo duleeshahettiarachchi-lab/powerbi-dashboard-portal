@@ -4,7 +4,7 @@ const root = path.join(__dirname, '..');
 const output = path.join(root, '_site');
 fs.mkdirSync(output, { recursive: true });
 // Publish only viewer assets. Server files and persistent admin data stay private.
-for (const name of ['index.html', 'dashboards.html', 'login.html', 'admin.html', 'viewer.html', 'snapshot.html', 'slideshow.html', 'offline.html', 'manifest.webmanifest', 'sw.js', 'css', 'js', 'assets', 'snapshot-config.json']) {
+for (const name of ['index.html', 'dashboards.html', 'login.html', 'admin.html', 'viewer.html', 'snapshot.html', 'slideshow.html', 'offline.html', 'manifest.webmanifest', 'favicon.ico', 'sw.js', 'css', 'js', 'assets', 'snapshot-config.json']) {
   fs.cpSync(path.join(root, name), path.join(output, name), { recursive: true });
 }
 fs.mkdirSync(path.join(output, 'snapshots'), { recursive: true });

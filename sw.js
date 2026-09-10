@@ -1,7 +1,7 @@
 'use strict';
 // Increment the version whenever the offline screen changes.
 const PREFIX = 'abm-offline-' + self.registration.scope + '-';
-const CACHE = PREFIX + 'v1';
+const CACHE = PREFIX + 'v2';
 const OFFLINE = new URL('offline.html', self.registration.scope).href;
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE).then(cache => cache.add(new Request(OFFLINE, { cache: 'reload' }))));
