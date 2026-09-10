@@ -119,10 +119,10 @@ const server = http.createServer(async (req, res) => {
       return res.end('window.DASHBOARD_CONFIG = ' + JSON.stringify(dashboards.filter(d => d.status === 'published')) + ';');
     }
     const relative = decodeURIComponent(route).replace(/^\/+/, '') || 'index.html';
-    if (!/^(?:[\w-]+\.html|(?:css|js|assets|snapshots|Live pictures|live-pictures)\/[^\\]+|snapshot-config\.json)$/.test(relative) || relative.split('/').some(p => p.startsWith('.'))) return json(res, 404, { error: 'Not found.' });
+    if (!/^(?:[\w-]+\.html|(?:css|js|assets|snapshots|Live pictures|live-pictures)\/[^\\]+|snapshot-config\.json|manifest\.webmanifest|sw\.js)$/.test(relative) || relative.split('/').some(p => p.startsWith('.'))) return json(res, 404, { error: 'Not found.' });
     const file = path.resolve(root, relative);
     if (!file.startsWith(root + path.sep) || !fs.existsSync(file) || !fs.statSync(file).isFile()) return json(res, 404, { error: 'Not found.' });
-    const types = { '.html': 'text/html', '.js': 'application/javascript', '.css': 'text/css', '.json': 'application/json', '.png': 'image/png', '.jpg': 'image/jpeg' };
+    const types = { '.html': 'text/html', '.js': 'application/javascript', '.css': 'text/css', '.webmanifest': 'application/manifest+json', '.json': 'application/json', '.png': 'image/png', '.jpg': 'image/jpeg' };
     res.writeHead(200, { 'Content-Type': types[path.extname(file).toLowerCase()] || 'application/octet-stream', 'Cache-Control': 'no-cache', 'X-Content-Type-Options': 'nosniff' });
     if (req.method === 'HEAD') return res.end();
     fs.createReadStream(file).pipe(res);

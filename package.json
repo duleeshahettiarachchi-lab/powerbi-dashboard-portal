@@ -10,7 +10,9 @@
     "generate:snapshot": "node scripts/capture-snapshot.js --id",
     "auth:hash": "node scripts/generate-password-hash.js",
     "start": "node server.js",
-    "test:admin": "node scripts/test-admin.js"
+    "test:admin": "node scripts/test-admin.js",
+    "build:pages": "node scripts/build-pages.js",
+    "test:pwa": "npm run build:pages && node scripts/test-pwa.cjs"
   },
   "devDependencies": {
     "playwright": "^1.46.0"

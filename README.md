@@ -43,3 +43,22 @@ By default, login is saved only for the current browser/tab session. After the b
 To keep a Smart TV logged in for a longer time, change `storageType` to `"local"` and set `sessionDurationDays`, for example `30`.
 
 To logout or reset a TV session, use the `Logout` button on the dashboard, TV Preview, slideshow, or live viewer page. You can also clear the browser site data for the GitHub Pages site.
+
+## Installable PWA and GitHub Pages
+
+The portal includes an app manifest, app icons, an Install app button on supporting browsers, and a service worker with an offline connection screen. Live reports, snapshots, login sessions, and dashboard data are not cached by the service worker. Reconnect to view dashboards. Installation requires HTTPS (GitHub Pages provides this) or localhost for testing. On iPhone/iPad, open in Safari and choose Share > Add to Home Screen. On supported desktop/Android browsers, use Install app or the browser's installation menu.
+
+To publish:
+
+1. Commit and push the contents of this folder (the folder containing `package.json`) to your GitHub repository's `main` branch.
+2. In repository Settings > Pages > Build and deployment, select **GitHub Actions** as the source.
+3. Run **Deploy GitHub Pages** from Actions, or push a change to `main`. The workflow also redeploys after successful scheduled snapshot updates.
+4. Open the Pages URL shown by the deployment, then install the app from your browser.
+
+All PWA paths are relative, supporting both `https://USER.github.io/REPOSITORY/` and a custom domain. The workflow builds an allowlisted static site in `_site` with `npm run build:pages`; no dependency installation is needed for that build. Only viewer assets are published, excluding the Node server, scripts, environment files, and admin data. GitHub Pages uses `js/dashboard-config.js` as its dashboard source; server-side edits in `data/dashboards.json` are not automatically exported to it. Admin editing requires the Node deployment described above. The static password screen remains only a casual access barrier.
+
+For local PWA testing use `npm start` with `ADMIN_PASSWORD` configured, then visit `http://localhost:3000`. Opening HTML files directly does not enable PWA support. Service worker updates activate after existing app windows close; increment the cache version in `sw.js` when modifying the offline screen. An already-open report may show its own connection error if connectivity drops; the offline screen appears on the next portal navigation.
+
+References: [GitHub Pages workflows](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages), [PWA installation](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Guides/Making_PWAs_installable).
+
+Verification: `npm run test:admin` checks server behavior; `npm run test:pwa` builds the site and checks repository-path hosting, icons, service worker registration, offline navigation, reconnect, and cache isolation. Install dev dependencies first. The browser test uses Edge on Windows and Playwright Chromium elsewhere (`npx playwright install chromium`); set `PLAYWRIGHT_CHANNEL` to override.
