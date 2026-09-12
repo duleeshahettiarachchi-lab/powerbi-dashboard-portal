@@ -699,8 +699,8 @@ main { flex: 1; }
 }
 .slideshow-back-button {
   position: fixed;
-  top: 14px;
-  left: 126px;
+  top: 58px;
+  left: 14px;
   z-index: 20;
 }
 .slideshow-page .viewer-tool-btn {
@@ -994,8 +994,8 @@ body.slideshow-fullscreen .slideshow-floating-controls {
     z-index: 45;
   }
   .slideshow-back-button {
-    top: 12px;
-    left: 132px;
+    top: 58px;
+    left: 12px;
     z-index: 45;
   }
   .slideshow-selector-panel {
