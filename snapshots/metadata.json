@@ -1,25 +1,25 @@
 {
-  "generatedAt": "2026-10-03T14:47:06.688Z",
+  "generatedAt": "2026-10-04T15:25:51.794Z",
   "dashboards": [
     {
       "id": 1,
       "name": "Pasting Machine Dashboard",
       "snapshotPath": "snapshots/1-pasting-machine-dashboard.jpg",
-      "capturedAt": "2026-10-03T14:46:11.975Z",
+      "capturedAt": "2026-10-04T15:24:59.764Z",
       "status": "ok"
     },
     {
       "id": 2,
       "name": "Casting Machine Dashboard",
       "snapshotPath": "snapshots/2-casting-machine-dashboard.jpg",
-      "capturedAt": "2026-10-03T14:46:39.827Z",
+      "capturedAt": "2026-10-04T15:25:25.813Z",
       "status": "ok"
     },
     {
       "id": 3,
       "name": "Assembly Line 01 Dashboard",
       "snapshotPath": "snapshots/3-assembly-line-01-dashboard.jpg",
-      "capturedAt": "2026-10-03T14:47:06.638Z",
+      "capturedAt": "2026-10-04T15:25:51.741Z",
       "status": "ok"
     }
   ]
