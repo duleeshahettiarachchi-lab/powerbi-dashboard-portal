@@ -928,7 +928,7 @@ body.slideshow-fullscreen .slideshow-floating-controls {
     gap: 0;
     align-self: auto;
     justify-content: space-between;
-    overflow-x: auto;
+    flex-wrap: wrap;
   }
   .site-nav a,
   .logout-button {

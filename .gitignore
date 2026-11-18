@@ -3,3 +3,6 @@ node_modules/
 .env
 
 _site/
+
+# Original video retained locally; publish the optimized web copy.
+VSM/Current state VSM/ABM_VSM_Walkthrough_Readable.mp4

@@ -119,13 +119,30 @@ const server = http.createServer(async (req, res) => {
       return res.end('window.DASHBOARD_CONFIG = ' + JSON.stringify(dashboards.filter(d => d.status === 'published')) + ';');
     }
     const relative = decodeURIComponent(route).replace(/^\/+/, '') || 'index.html';
-    if (!/^(?:[\w-]+\.html|(?:css|js|assets|snapshots|Live pictures|live-pictures)\/[^\\]+|snapshot-config\.json|manifest\.webmanifest|favicon\.ico|sw\.js)$/.test(relative) || relative.split('/').some(p => p.startsWith('.'))) return json(res, 404, { error: 'Not found.' });
+    if (!/^(?:[\w-]+\.html|(?:css|js|assets|snapshots|Live pictures|live-pictures|VSM)\/[^\\]+|snapshot-config\.json|manifest\.webmanifest|favicon\.ico|sw\.js)$/.test(relative) || relative.split('/').some(p => p.startsWith('.'))) return json(res, 404, { error: 'Not found.' });
     const file = path.resolve(root, relative);
     if (!file.startsWith(root + path.sep) || !fs.existsSync(file) || !fs.statSync(file).isFile()) return json(res, 404, { error: 'Not found.' });
-    const types = { '.ico': 'image/x-icon', '.html': 'text/html', '.js': 'application/javascript', '.css': 'text/css', '.webmanifest': 'application/manifest+json', '.json': 'application/json', '.png': 'image/png', '.jpg': 'image/jpeg' };
-    res.writeHead(200, { 'Content-Type': types[path.extname(file).toLowerCase()] || 'application/octet-stream', 'Cache-Control': 'no-cache', 'X-Content-Type-Options': 'nosniff' });
+    const types = { '.mp4': 'video/mp4', '.pdf': 'application/pdf', '.ico': 'image/x-icon', '.html': 'text/html', '.js': 'application/javascript', '.css': 'text/css', '.webmanifest': 'application/manifest+json', '.json': 'application/json', '.png': 'image/png', '.jpg': 'image/jpeg' };
+    const size = fs.statSync(file).size;
+    const headers = { 'Content-Type': types[path.extname(file).toLowerCase()] || 'application/octet-stream', 'Cache-Control': 'no-cache', 'X-Content-Type-Options': 'nosniff', 'Accept-Ranges': 'bytes', 'Content-Length': size };
+    let start = 0, end = size - 1, status = 200;
+    if (req.headers.range && req.method === 'GET') {
+      const match = /^bytes=(\d*)-(\d*)$/.exec(req.headers.range);
+      if (match && (match[1] || match[2])) {
+        start = match[1] ? Number(match[1]) : Math.max(0, size - Number(match[2]));
+        end = match[1] && match[2] ? Math.min(Number(match[2]), size - 1) : size - 1;
+      }
+      if (!match || (!match[1] && !match[2]) || start > end || start >= size) {
+        res.writeHead(416, { 'Content-Range': 'bytes */' + size });
+        return res.end();
+      }
+      status = 206;
+      headers['Content-Range'] = `bytes ${start}-${end}/${size}`;
+      headers['Content-Length'] = end - start + 1;
+    }
+    res.writeHead(status, headers);
     if (req.method === 'HEAD') return res.end();
-    fs.createReadStream(file).pipe(res);
+    fs.createReadStream(file, { start, end: Math.max(0, end) }).pipe(res);
   } catch (error) { json(res, 400, { error: error.code ? 'Unable to save or read dashboard data.' : error.message }); }
 });
 server.listen(Number(process.env.PORT) || 3000, () => console.log('Dashboard portal listening on port ' + (process.env.PORT || 3000)));

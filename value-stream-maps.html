@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Value Stream Map videos and PDF documents.">
+  <title>Value Stream Maps | Dashboard Portal</title>
+  <link rel="stylesheet" href="css/styles.css?v=20261118-vsm">
+  <script src="js/auth-config.js?v=20260908-3"></script>
+  <script src="js/auth.js?v=20261118-vsm"></script>
+  <link rel="stylesheet" href="css/admin.css?v=2">
+  <meta name="theme-color" content="#12345a">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="assets/icon-192.png?v=20260916">
+  <script src="js/pwa.js" defer></script>
+  <link rel="icon" href="favicon.ico?v=20260916" type="image/x-icon">
+  <link rel="stylesheet" href="css/vsm.css">
+</head>
+<body>
+  <div class="site-shell">
+    <header class="site-header">
+      <div class="header-inner">
+        <a class="brand" href="index.html" aria-label="Dashboard Portal Home">
+          <div class="brand-mark"><img src="assets/ABM%20logo.png?v=20260916" alt="ABM"></div>
+          <div class="brand-copy">
+            <strong>Associated Battery</strong>
+            <strong>Manufacturers (Ceylon) Limited</strong>
+          </div>
+        </a>
+        <nav class="site-nav" aria-label="Main navigation">
+
+          <a href="index.html">Dashboards</a>
+          <a class="active" aria-current="page" href="value-stream-maps.html">Value Stream Maps</a>
+          <a href="slideshow.html">Slideshow</a>
+          <button class="logout-button" type="button" data-auth-logout>Logout</button>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="page-banner"><div class="page-banner-inner"><h1>Value Stream Maps</h1></div></section>
+      <section class="section">
+        <div class="dashboard-toolbar">
+          <label class="search-box"><span class="search-icon">&#8981;</span><input id="vsmSearch" type="search" placeholder="Search value stream maps..." aria-label="Search value stream maps"></label>
+          <div class="count-pill" id="vsmCount">3 value stream maps</div>
+        </div>
+        <div class="dashboard-grid vsm-grid" id="vsmGrid"></div>
+        <p id="vsmEmpty" hidden>No value stream map matches your search.</p>
+      </section>
+      <dialog id="vsmPlayer" aria-labelledby="vsmPlayerTitle">
+        <div class="vsm-player-heading"><h2 id="vsmPlayerTitle"></h2><button type="button" id="vsmClose" class="btn">Close video</button></div>
+        <video id="vsmVideo" controls playsinline preload="metadata">Your browser does not support video playback.</video>
+      </dialog>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-inner footer-inner-credit-only">
+        <div class="footer-credit footer-credit-logo">
+          <span>Designed by</span>
+          <a class="footer-name-link" href="https://leanacademysl.com/" target="_blank" rel="noopener">Lean Academy Sri Lanka</a>
+          <a class="footer-logo-link" href="https://leanacademysl.com/" target="_blank" rel="noopener" aria-label="Lean Academy Sri Lanka logo">
+            <img src="assets/lean-academy-logo.png?v=20260908-1" alt="Lean Academy Sri Lanka">
+          </a>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <script src="js/vsm.js" defer></script>
+</body>
+</html>

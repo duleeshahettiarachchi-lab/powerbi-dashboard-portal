@@ -11,7 +11,7 @@
   }
   function returnUrl() {
     var value = new URLSearchParams(location.search).get('returnTo') || 'index.html';
-    return /^(index|dashboards|viewer|snapshot|slideshow)\.html(?:[?#].*)?$/.test(value) ? value : 'index.html';
+    return /^(index|dashboards|viewer|snapshot|slideshow|value-stream-maps)\.html(?:[?#].*)?$/.test(value) ? value : 'index.html';
   }
   function redirect() { location.replace('login.html?returnTo=' + encodeURIComponent((location.pathname.split('/').pop() || 'index.html') + location.search)); }
   async function request(path, data) {
